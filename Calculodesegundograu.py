@@ -28,7 +28,7 @@ def obter_input():
 root = tk.Tk()
 root.title("Calculo de Segundo Grau")
 
-informacao_label = tk.Label(root, text="Esta é a informação que você quer escrever na janela")
+informacao_label = tk.Label(root, text="Digite os valores de A B C respectivamente")
 informacao_label.pack()
 
 campo_entrada1 = tk.Entry(root)
