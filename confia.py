@@ -6,7 +6,8 @@ def adicao():
     
     a = campo_entrada1.get()
     b = campo_entrada2.get()
-    resultado.config(text="Hello! World!")
+    resultado.config(text="Hello! World!", font=("Arial", 18))
+
 
 root = tk.Tk()
 root.title("Confia na Adicao")
