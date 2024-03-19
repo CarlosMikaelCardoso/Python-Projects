@@ -26,10 +26,11 @@ resultado.pack()
 botao_add = tk.Button(text="=", command=adicao)
 botao_add.pack()
 
-imagem = imagem.open("/Downloads/confia.png")
+imagem = Image.open("C:\\Users\\Administrator\\Downloads\\confia.png")
 imagem_tk = ImageTk.PhotoImage(imagem)
 
-label_imagem = tk.Label(root, imagem=imagem_tk)
+
+label_imagem = tk.Label(root, image=imagem_tk)
 label_imagem.pack()
 
 root.mainloop()
