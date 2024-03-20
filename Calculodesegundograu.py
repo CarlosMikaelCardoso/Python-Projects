@@ -1,3 +1,4 @@
+#pip install pygame
 import math
 import tkinter as tk
 from PIL import Image, ImageTk
