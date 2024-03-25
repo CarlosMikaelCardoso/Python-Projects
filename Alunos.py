@@ -4,6 +4,7 @@ def configurar_qtd_alunos():
     global qalunos
     qalunos = int(entry_qtd_alunos.get())
     alunos_label.config(text=f"Inserindo informações para {qalunos} alunos")
+    entry_qtd_alunos.delete(0, 'end')
 
 def adicionar_aluno():
     global qalunos
@@ -14,6 +15,7 @@ def adicionar_aluno():
     nota = entrada_nota.get()
 
     resultado.append(f"Aluno: {aluno} - Nota: {nota}")
+    resultado.sort()
 
     entrada_aluno.delete(0, 'end')
     entrada_nota.delete(0, 'end')

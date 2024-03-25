@@ -7,7 +7,7 @@ import pygame.mixer
 pygame.mixer.init()
 
 pygame.mixer.music.load("C:\\Users\\Administrator\\Downloads\\c418-sweden-minecraft-made-with-Voicemod.wav") 
-pygame.mixer.music.play()      
+pygame.mixer.music.play(loops=1)      
 a = 0
 b = 0
 c = 0
