@@ -2,12 +2,11 @@ import tkinter as tk
 from tkinter import ttk
 import pandas as pd
 
-idd = 0
 def error():
     erro = tk.Tk()
     erro.title("Erro")
-    erro = tk.Label(erro, text="Úsuario/Senha incorreto!")
-    erro.pack()
+    erro_label = tk.Label(erro, text="Usuário/Senha incorreto!")
+    erro_label.pack()
 
 def inicio():
     professor.withdraw()
@@ -26,12 +25,12 @@ def verificacao():
     else:
         senha_entry.delete(0, 'end')
         error()
-        
+
 def aluno():
-    global aluno_result,alunos,id_result
+    global aluno_result, alunos, id_result
     alunos = tk.Tk()
     alunos.title("Alunos")
-    id_label = tk.Label(alunos,text="ID")
+    id_label = tk.Label(alunos, text="ID")
     id_label.pack()
     id_buscado = tk.Entry(alunos)
     id_buscado.pack()
@@ -41,9 +40,9 @@ def aluno():
     nome_buscado.pack()
     
     def busca():
-        id_aluno = id_buscado.get()  # Obter o texto da entrada do ID
-        nome_aluno = nome_buscado.get()  # Obter o texto da entrada do nome
-        procurar_aluno(id_aluno=id_aluno, nome_aluno=nome_aluno)  # Passar os textos para a função de busca
+        id_aluno = id_buscado.get()  
+        nome_aluno = nome_buscado.get()  
+        procurar_aluno(id_aluno=id_aluno, nome_aluno=nome_aluno) 
         
     busca_button = tk.Button(alunos, text="Buscar", command=busca, width=16, height=1)  
     busca_button.pack()
@@ -51,11 +50,11 @@ def aluno():
     voltar = tk.Button(alunos, text="Voltar", command=inicio2, width=16, height=1)
     voltar.pack()
     
-    aluno_result = tk.Label(alunos,text='')
+    aluno_result = tk.Label(alunos, text='')
     id_result = tk.Label(alunos, text='')
 
 def janela_professor():
-    global botao_janela,professor,botao_adicionar,nome_alunos,entrada_aluno,nome_nota,entrada_nota,alunos_label
+    global botao_janela, professor, botao_adicionar, nome_alunos, entrada_aluno, nome_nota, entrada_nota, alunos_label
     professor = tk.Toplevel()
     professor.title("Professor")
     professor.geometry("250x300")
@@ -69,21 +68,21 @@ def janela_professor():
     voltar = tk.Button(professor, text="Voltar", command=inicio, width=16, height=1)
     voltar.pack()
 
-    nome_alunos = tk.Label(professor,text='Aluno')
+    nome_alunos = tk.Label(professor, text='Aluno')
     entrada_aluno = tk.Entry(professor)
-    nome_nota = tk.Label(professor,text='Nota')
+    nome_nota = tk.Label(professor, text='Nota')
     entrada_nota = tk.Entry(professor)
 
 def autenticacao():
-    global autenticar, user, senha,user_entry,senha_entry
+    global autenticar, user, senha, user_entry, senha_entry
     root.withdraw()
     autenticar = tk.Tk()
     autenticar.title("Login")
     autenticar.geometry("225x110")
-    user_label = tk.Label(autenticar, text="Usúario")
+    user_label = tk.Label(autenticar, text="Usuário")
     senha_label = tk.Label(autenticar, text="Senha")
     user_entry = tk.Entry(autenticar)
-    senha_entry = tk.Entry(autenticar, show="*")  # To hide the password
+    senha_entry = tk.Entry(autenticar, show="*")  
     user_label.pack()
     user_entry.pack()
     senha_label.pack()
@@ -118,13 +117,12 @@ def chama():
     botao_adicionar.pack()
 
 def adicionar_aluno():    
-    global qalunos,idd
+    global qalunos, idd
     idd += 1
     aluno = entrada_aluno.get()
     nota = entrada_nota.get()
 
-    resultado.append(f"ID: {idd}|Aluno: {aluno}| Nota: {nota}|")
-    resultado.sort()
+    resultado.append(f"ID: {idd}|Aluno: {aluno}|Nota: {nota}")
 
     entrada_aluno.delete(0, 'end')
     entrada_nota.delete(0, 'end')
@@ -145,12 +143,12 @@ def adicionar_aluno():
         entrada_aluno.pack_forget()
         botao_janela.pack()
         botao_adicionar.pack_forget()
-        
+
 def notas():
-    global result
     nota = tk.Tk()
     nota.title("Notas")
-    tabela = ttk.Treeview(janela)
+    
+    tabela = ttk.Treeview(nota)
     tabela['columns'] = ('ID', 'Nome', 'Nota')
 
     # Define as colunas
@@ -164,16 +162,28 @@ def notas():
     tabela.heading('Nome', text='Nome')
     tabela.heading('Nota', text='Nota')
 
-    # Carrega os dados do arquivo como DataFrame
-    df = pd.read_csv('arquivo.txt', delimiter=':')  # Supondo que o arquivo está em formato CSV e cada linha tem o formato "chave: valor"
-
-    # Insere os dados na tabela
-    for index, row in df.iterrows():
-        tabela.insert('', index, values=(row['ID'], row['Nome'], row['Nota']))
+    # Carrega os dados do arquivo
+    try:
+        with open('arquivo.txt', 'r') as f:
+            linha = f.readline()
+            index = 0
+            while linha:
+                if linha.startswith('ID:'):
+                    parts = linha.split('|')
+                    id_ = parts[0].split(':')[1].strip()
+                    nome = parts[1].split(':')[1].strip()
+                    nota = parts[2].split(':')[1].strip()
+                    tabela.insert('', index, values=(id_, nome, nota))
+                    index += 1
+                linha = f.readline()
+    except FileNotFoundError:
+        print("Arquivo 'arquivo.txt' não encontrado.")
+    except Exception as e:
+        print(f"Erro ao ler o arquivo: {e}")
 
     # Empacota a tabela
     tabela.pack(expand=True, fill=tk.BOTH)
-   
+
 def procurar_aluno(id_aluno=None, nome_aluno=None):
     if id_aluno is None and nome_aluno is None:
         print("É necessário fornecer pelo menos o ID ou o nome do aluno para procurar.")
@@ -185,23 +195,12 @@ def procurar_aluno(id_aluno=None, nome_aluno=None):
                 aluno_result.config(text=linha)
                 aluno_result.pack()
                 return
-        for linha in f:
-            if id_aluno is not None and f"ID: {id_aluno}" in linha:
+            elif id_aluno is not None and f"ID: {id_aluno}" in linha:
                 id_result.config(text=linha)
                 id_result.pack()
                 return
     aluno_result.config(text=f"Aluno com ID '{id_aluno}' ou nome '{nome_aluno}' não encontrado.")
 
-       
-    nome_alunos.pack_forget()
-    nome_nota.pack_forget()
-    entrada_nota.pack_forget()
-    entrada_aluno.pack_forget()
-    botao_janela.pack()
-    botao_adicionar.pack_forget()
-        
-
-       
 root = tk.Tk()
 root.title("Alunos")
 root.geometry("300x300")
@@ -211,6 +210,7 @@ prof_button.pack()
 
 alunos_button = tk.Button(root, text="Aluno", command=aluno, width=16, height=1)
 alunos_button.pack()
+
 resultado = []
 
 root.mainloop()
