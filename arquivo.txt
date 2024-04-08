@@ -1,0 +1,4 @@
+ID: 1|Aluno: Mikael| Nota: 2|
+ID: 2|Aluno: Aline| Nota: 4|
+ID: 3|Aluno: Alice | Nota: 10|
+ID: 4|Aluno: Carlos| Nota: 1|
