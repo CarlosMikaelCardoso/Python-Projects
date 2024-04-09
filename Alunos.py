@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import pandas as pd
 
+idd = 0
 def error():
     erro = tk.Tk()
     erro.title("Erro")
@@ -30,19 +31,14 @@ def aluno():
     global aluno_result, alunos, id_result
     alunos = tk.Tk()
     alunos.title("Alunos")
-    id_label = tk.Label(alunos, text="ID")
-    id_label.pack()
-    id_buscado = tk.Entry(alunos)
-    id_buscado.pack()
     nome_label = tk.Label(alunos, text="Nome")
     nome_label.pack()
     nome_buscado = tk.Entry(alunos)
     nome_buscado.pack()
     
     def busca():
-        id_aluno = id_buscado.get()  
         nome_aluno = nome_buscado.get()  
-        procurar_aluno(id_aluno=id_aluno, nome_aluno=nome_aluno) 
+        procurar_aluno(nome_aluno=nome_aluno) 
         
     busca_button = tk.Button(alunos, text="Buscar", command=busca, width=16, height=1)  
     busca_button.pack()
@@ -184,22 +180,26 @@ def notas():
     # Empacota a tabela
     tabela.pack(expand=True, fill=tk.BOTH)
 
-def procurar_aluno(id_aluno=None, nome_aluno=None):
-    if id_aluno is None and nome_aluno is None:
-        print("É necessário fornecer pelo menos o ID ou o nome do aluno para procurar.")
+def procurar_aluno(nome_aluno=None):
+    if nome_aluno is None:
+        print("É necessário fornecer o nome do aluno para procurar.")
         return
     
     with open('arquivo.txt', 'r') as f:
+        alunos_encontrados = []
         for linha in f:
             if nome_aluno is not None and f"Aluno: {nome_aluno}" in linha:
-                aluno_result.config(text=linha)
-                aluno_result.pack()
-                return
-            elif id_aluno is not None and f"ID: {id_aluno}" in linha:
-                id_result.config(text=linha)
-                id_result.pack()
-                return
-    aluno_result.config(text=f"Aluno com ID '{id_aluno}' ou nome '{nome_aluno}' não encontrado.")
+                alunos_encontrados.append(linha.strip())
+
+        if alunos_encontrados:
+            resultado_texto = '\n'.join(alunos_encontrados)
+            aluno_result.config(text=resultado_texto)
+            aluno_result.pack()
+        else:
+            aluno_result.config(text=f"Aluno com o nome '{nome_aluno}' não encontrado.")
+            aluno_result.pack()
+
+
 
 root = tk.Tk()
 root.title("Alunos")
