@@ -1,2 +1,0 @@
-ID: 4|Aluno: Alan olindo|Nota: 10
-ID: 6|Aluno: Alan matheus|Nota: 9

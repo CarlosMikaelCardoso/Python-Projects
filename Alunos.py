@@ -4,12 +4,14 @@ import pandas as pd
 tabela = None
 idd = 0
 def error():
+    #Mensagem após errar senha ou usuário de Login
     erro = tk.Tk()
     erro.title("Erro")
     erro_label = tk.Label(erro, text="Usuário/Senha incorreto!")
     erro_label.pack()
 
 def inicio():
+    #Volta para a janela root
     professor.withdraw()
     root.deiconify()
     
@@ -18,6 +20,7 @@ def inicio2():
     root.deiconify()
     
 def verificacao():
+    #Login
     user1 = user_entry.get()
     senha1 = senha_entry.get()
     if user1 == user and senha1 == senha:
@@ -28,6 +31,7 @@ def verificacao():
         error()
 
 def aluno():
+    #Janela do Aluno, Consulta o Nome do Aluno
     global aluno_result, alunos, id_result
     alunos = tk.Tk()
     alunos.title("Alunos")
@@ -37,6 +41,7 @@ def aluno():
     nome_buscado.pack()
     
     def busca():
+        #Chama a função Buscar, Busca o nome do aluno
         nome_aluno = nome_buscado.get()  
         procurar_aluno(nome_aluno=nome_aluno) 
         
@@ -50,6 +55,7 @@ def aluno():
     id_result = tk.Label(alunos, text='')
 
 def janela_professor():
+    #Janela do Professor, Tem as funções Adicionar, Checar e Excluir
     global botao_janela, professor, botao_adicionar, nome_alunos, entrada_aluno, nome_nota, entrada_nota, alunos_label
     professor = tk.Toplevel()
     professor.title("Professor")
@@ -72,6 +78,7 @@ def janela_professor():
     entrada_nota = tk.Entry(professor)
 
 def autenticacao():
+    #Janela de Login
     global autenticar, user, senha, user_entry, senha_entry
     root.withdraw()
     autenticar = tk.Tk()
@@ -91,6 +98,7 @@ def autenticacao():
     verificar_button.pack()
 
 def configurar_qtd_alunos():
+    #Quantidade de alunos a serem inseridos no Arquivo.txt 
     global qalunos, entry_qtd_alunos
     qalunos = int(entry_qtd_alunos.get())
     alunos_label.config(text=f"Inserindo informações para {qalunos} alunos")
@@ -98,6 +106,7 @@ def configurar_qtd_alunos():
     janela.destroy()
     
 def chama():
+    #Chama a janela Qalunos
     global janela, entry_qtd_alunos
     janela = tk.Toplevel()
     janela.title("Qalunos")
@@ -115,6 +124,7 @@ def chama():
     botao_adicionar.pack()
 
 def adicionar_aluno():    
+    #Função para adicionar alunos
     global qalunos, idd
     idd += 1
     aluno = entrada_aluno.get()
@@ -130,6 +140,7 @@ def adicionar_aluno():
         alunos_label.config(text=f"Inserindo informações para {qalunos} alunos")
 
     if qalunos == 0:
+        #Depois da inserção dos alunos, e mostrado um planilha com as informações
         with open('arquivo.txt', 'w') as f:
             f.write('\n'.join(resultado))
             
@@ -143,6 +154,7 @@ def adicionar_aluno():
         botao_adicionar.pack_forget()
 
 def notas():
+    #Criação da planilha com a biblioteca Pandas
     global tabela
     nota = tk.Tk()
     nota.title("Notas")
@@ -187,6 +199,7 @@ def notas():
         print("Erro: a tabela não foi inicializada corretamente.")
 
 def procurar_aluno(nome_aluno=None):
+    #Faz a proucura de alunos pelo nome
     if nome_aluno is None:
         print("É necessário fornecer o nome do aluno para procurar.")
         return
@@ -206,18 +219,25 @@ def procurar_aluno(nome_aluno=None):
             aluno_result.pack()
 
 def excluir():
+    global excluir_entry
+    #Janela de Excluir Alunos
     excluir1 = tk.Tk()
     excluir1.title("Excluir")
     notas()
+    excluir_label = tk.Label(excluir1, text="ID")
+    excluir_label.pack()
     excluir_entry = tk.Entry(excluir1)
     excluir_entry.pack()
+    
     
     # Função lambda para chamar deletar_aluno com o ID do aluno inserido no Entry
     delta_aluno_botao = tk.Button(excluir1, text="Enter", command=lambda: deletar_aluno(excluir_entry.get()))
     delta_aluno_botao.pack()
+    
 
 def deletar_aluno(id_aluno):
     global tabela
+    excluir_entry.delete(0, 'end')
     # Percorre todas as linhas da tabela
     for item in tabela.get_children():
         # Obtém o ID do aluno da linha atual
@@ -235,23 +255,6 @@ def deletar_aluno(id_aluno):
                         file.write(line)
             return  # Sai da função após deletar o aluno
     print(f"Aluno com ID {id_aluno} não encontrado na tabela.")
-
-
-
-
-root = tk.Tk()
-root.title("Alunos")
-root.geometry("300x300")
-
-prof_button = tk.Button(root, text="Professor", command=autenticacao, width=16, height=1)
-prof_button.pack()
-
-alunos_button = tk.Button(root, text="Aluno", command=aluno, width=16, height=1)
-alunos_button.pack()
-
-resultado = []
-
-root.mainloop()
 
 root = tk.Tk()
 root.title("Alunos")
