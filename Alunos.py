@@ -103,7 +103,7 @@ def configurar_qtd_alunos():
     qalunos = int(entry_qtd_alunos.get())
     alunos_label.config(text=f"Inserindo informações para {qalunos} alunos")
     entry_qtd_alunos.delete(0, 'end')
-    janela.destroy()
+    janela.withdraw()
     
 def chama():
     #Chama a janela Qalunos
