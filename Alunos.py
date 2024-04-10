@@ -41,9 +41,10 @@ def aluno():
     nome_buscado.pack()
     
     def busca():
+        global nome_aluno1
         #Chama a função Buscar, Busca o nome do aluno
-        nome_aluno = nome_buscado.get()  
-        procurar_aluno(nome_aluno=nome_aluno) 
+        nome_aluno1 = nome_buscado.get()  
+        procurar_aluno()
         
     busca_button = tk.Button(alunos, text="Buscar", command=busca, width=16, height=1)  
     busca_button.pack()
@@ -142,10 +143,8 @@ def adicionar_aluno():
     if qalunos == 0:
         #Depois da inserção dos alunos, e mostrado um planilha com as informações
         with open('arquivo.txt', 'w') as f:
-            f.write('\n'.join(resultado))
-            
-        notas()
-            
+            f.write('\n'.join(resultado))   
+        notas()      
         nome_alunos.pack_forget()
         nome_nota.pack_forget()
         entrada_nota.pack_forget()
@@ -198,26 +197,28 @@ def notas():
     else:
         print("Erro: a tabela não foi inicializada corretamente.")
 
-def procurar_aluno(nome_aluno=None):
-    #Faz a proucura de alunos pelo nome
-    if nome_aluno is None:
-        print("É necessário fornecer o nome do aluno para procurar.")
-        return
+def procurar_aluno():
+    #Faz a proucura de alunos pelo nome                
+    if nome_aluno1 == '':
+        aluno_result.config(text=f"Digite um nome de aluno!")
+        aluno_result.pack()
+        return        
     
-    with open('arquivo.txt', 'r') as f:
-        alunos_encontrados = []
-        for linha in f:
-            if nome_aluno is not None and f"Aluno: {nome_aluno}" in linha:
-                alunos_encontrados.append(linha.strip())
+    elif nome_aluno1 is not None:
+        with open('arquivo.txt', 'r') as f:
+            alunos_encontrados = []
+            for linha in f:
+                if nome_aluno1 is not None and f"Aluno: {nome_aluno1}" in linha:
+                    alunos_encontrados.append(linha.strip())
 
-        if alunos_encontrados:
-            resultado_texto = '\n'.join(alunos_encontrados)
-            aluno_result.config(text=resultado_texto)
-            aluno_result.pack()
-        else:
-            aluno_result.config(text=f"Aluno com o nome '{nome_aluno}' não encontrado.")
-            aluno_result.pack()
-
+            if alunos_encontrados:
+                resultado_texto = '\n'.join(alunos_encontrados)
+                aluno_result.config(text=resultado_texto)
+                aluno_result.pack()
+            else:
+                aluno_result.config(text=f"Aluno com o nome '{nome_aluno1}' não encontrado.")
+                aluno_result.pack()
+    
 def excluir():
     global excluir_entry
     #Janela de Excluir Alunos
@@ -228,13 +229,11 @@ def excluir():
     excluir_label.pack()
     excluir_entry = tk.Entry(excluir1)
     excluir_entry.pack()
-    
-    
+ 
     # Função lambda para chamar deletar_aluno com o ID do aluno inserido no Entry
     delta_aluno_botao = tk.Button(excluir1, text="Enter", command=lambda: deletar_aluno(excluir_entry.get()))
     delta_aluno_botao.pack()
     
-
 def deletar_aluno(id_aluno):
     global tabela
     excluir_entry.delete(0, 'end')
@@ -268,4 +267,10 @@ alunos_button.pack()
 
 resultado = []
 
+root.mainloop()
+
+alunos_button = tk.Button(root, text="Aluno", command=aluno, width=16, height=1)
+alunos_button.pack()
+
+resultado = []
 root.mainloop()
