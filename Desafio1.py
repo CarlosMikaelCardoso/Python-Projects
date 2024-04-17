@@ -42,7 +42,7 @@ primeiros_tres_paragrafos = paragrafos[:]
 
 # Separar o texto em parágrafos usando quebra de linha
 with open('Arq.txt', 'w') as f:
-    for paragrafo in paragrafos:
+    for paragrafo in primeiro_tres_paragrafos:
         f.write(paragrafo + '.\n')
         var += 1
         # A cada 4 linhas pula uma linha, para gerar o paragrafo
