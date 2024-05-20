@@ -18,15 +18,27 @@ def menu():
             elif op == 4:
                 insert_Professor()
             else:
+                os.system('clear')
                 pass
         elif op == 2:
-            procurar_curso()
+            os.system('clear')
+            print("------------Procurar-------------\n 1 - Por Curso \n 2 - Por Disciplina")
+            op = int(input(": "))
+            if op == 1:
+                procurar_curso()
+            elif op == 2:
+                procurar_disciplina()
+            else:
+                os.system('clear')
+                pass
+            
         elif op == 3:
             a = 1
         else:
             pass
             
 def insert_Disciplina():
+    os.system('clear')
     nome = input("Nome da Disciplina?: ").strip()
     
     conexao = connect.connect("Banco.db")
@@ -50,6 +62,7 @@ def insert_Disciplina():
     conexao.close()
 
 def insert_Curso():
+    os.system('clear')
     nome = input("Nome do Curso?: ").strip()
     
     conexao = connect.connect("Banco.db")
@@ -73,6 +86,7 @@ def insert_Curso():
     conexao.close()
 
 def insert_Aluno():
+    os.system('clear')
     nome = input("Nome do Aluno?: ").strip()
     disciplina_id = int(input("ID da Disciplina?: "))
     curso_id = int(input("ID do Curso?: "))
@@ -98,6 +112,7 @@ def insert_Aluno():
     conexao.close()
 
 def insert_Professor():
+    os.system('clear')
     nome = input("Nome do Professor?: ").strip()
     curso_id = int(input("ID do Curso?: "))
     disciplina_id = int(input("ID da Disciplina?: "))
@@ -123,6 +138,7 @@ def insert_Professor():
     conexao.close()
     
 def procurar_curso():
+    os.system('clear')
     comando = '''SELECT * FROM Curso'''
     cursor.execute(comando)
     result = cursor.fetchall()
@@ -131,10 +147,11 @@ def procurar_curso():
         for resultado in result:
             print("Nome: ", resultado[0])
             print("ID: ", resultado[1])
+            print("--------------------")
     else:
         print("Nennhum curso cadastrado")
-        pass
-    curso_id = input("-------------------\nID do Curso: ").strip()
+        
+    curso_id = input("--------------------\nID do Curso: ")
     os.system('clear')
     comando = '''SELECT * FROM Aluno WHERE curso_id = ?;'''
     cursor.execute(comando, (curso_id,))
@@ -148,17 +165,37 @@ def procurar_curso():
     else:
         print("Nenhum aluno encontrado matriculado neste curso.")
 
-    
-try:
+def procurar_disciplina():
+    os.system('clear')
+    comando = ''' SELECT * FROM Disciplina '''
+    cursor.execute(comando)
+    result = cursor.fetchall()
+    if result:
+        print ("----------Disciplinas----------")
+        for resultados in result:
+            print("ID: ", resultados[0])    
+            print("Nome: ", resultados[1])
+            print("------------------------------")
+    else:
+        print("Sem disciplinas cadastradas")
+    id_disciplina = input("------------------------------\nID da Disciplina: ")
+    os.system('clear') 
+    comando = ''' SELECT * FROM Aluno WHERE disciplina_id = ?;'''
+    cursor.execute(comando, (id_disciplina))
+    resultado = cursor.fetchall()
+    if resultado:
+        print("Resultado da Busca: ")
+        for resultados in resultado:
+            print("ID: ", resultados[0])
+            print("Nome: ", resultados[1])
+            print("----------------------------")
+    else:
+        print("Não há alunos matriculados nessa disciplina")
+        
+try:        
     conexao = connect.connect("Banco.db")
     cursor = conexao.cursor()
     cursor.execute('''CREATE TABLE IF NOT EXISTS Disciplina (
-                        nome TEXT NOT NULL UNIQUE,
-                        id INTEGER NOT NULL,
-                        PRIMARY KEY (id)
-                     );''')
-
-    cursor.execute('''CREATE TABLE IF NOT EXISTS Curso(
                         nome TEXT NOT NULL UNIQUE,
                         id INTEGER NOT NULL,
                         PRIMARY KEY (id)
