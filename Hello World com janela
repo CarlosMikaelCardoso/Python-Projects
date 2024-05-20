@@ -17,7 +17,7 @@ def start_typing(text):
 root = tk.Tk()
 root.title("Typewriter Effect")
 
-start_button = tk.Button(root, text="Start", command=lambda: start_typing("Hello World You are GAY"))
+start_button = tk.Button(root, text="Start", command=lambda: start_typing("A"))
 start_button.pack()
 
 result = tk.Label(root, text="")

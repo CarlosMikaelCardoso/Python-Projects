@@ -3,7 +3,7 @@ import time
 import tkinter as tk
 
 
-text = "Hello World You are GAY"
+text = "Ate Agora quero saber como voce consegue ser tao gostosa!!"
 temp = ''
 for ch in text:
     for i in string.printable:
