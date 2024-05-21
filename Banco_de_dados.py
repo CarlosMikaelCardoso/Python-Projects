@@ -1,13 +1,21 @@
 import sqlite3 as connect
 import os
+
 def menu():
-    a = 0
-    while a == 0:
-        print ("-----------------MENU-----------------\n 1 - Inserir informacoes nas tabelas \n 2 - Procurar \n 3 - Sair do Menu")
+    while True:
+        print("-----------------MENU-----------------")
+        print("1 - Inserir informacoes nas tabelas")
+        print("2 - Procurar")
+        print("3 - Sair do Menu")
         op = int(input(": "))
+        
         if op == 1:
             os.system('clear')
-            print("------------------TABELAS----------------\n 1 - Diciplina \n 2 - Curso \n 3 - Aluno \n 4 - Professores")
+            print("------------------TABELAS----------------")
+            print("1 - Disciplina")
+            print("2 - Curso")
+            print("3 - Aluno")
+            print("4 - Professores")
             op = int(input(": "))
             if op == 1:
                 insert_Disciplina()
@@ -19,24 +27,29 @@ def menu():
                 insert_Professor()
             else:
                 os.system('clear')
-                pass
         elif op == 2:
             os.system('clear')
-            print("------------Procurar-------------\n 1 - Por Curso \n 2 - Por Disciplina")
+            print("------------Procurar-------------")
+            print("1 - Aluno por Curso")
+            print("2 - Aluno por Disciplina")
+            print("3 - Professor por Curso")
+            print("4 - Professor por Disciplina")
             op = int(input(": "))
             if op == 1:
                 procurar_curso()
             elif op == 2:
                 procurar_disciplina()
+            elif op == 3:
+                procurar_professor_curso()
+            elif op == 4:
+                procurar_professor_disciplina()
             else:
                 os.system('clear')
-                pass
-            
         elif op == 3:
-            a = 1
+            break
         else:
-            pass
-            
+            os.system('clear')
+
 def insert_Disciplina():
     os.system('clear')
     nome = input("Nome da Disciplina?: ").strip()
@@ -49,9 +62,7 @@ def insert_Disciplina():
     max_id = result[0] if result[0] is not None else 0
     id = max_id + 1
     
-    comando = '''INSERT INTO Disciplina (nome, id)
-                 VALUES (?, ?)'''
-    cursor.execute(comando, (nome, id))
+    cursor.execute("INSERT INTO Disciplina (nome, id) VALUES (?, ?)", (nome, id))
     
     conexao.commit()
     cursor.execute("SELECT * FROM Disciplina;")
@@ -64,6 +75,7 @@ def insert_Disciplina():
 def insert_Curso():
     os.system('clear')
     nome = input("Nome do Curso?: ").strip()
+    id_disciplina = input("ID da disciplina associada ao curso: ")
     
     conexao = connect.connect("Banco.db")
     cursor = conexao.cursor()
@@ -73,9 +85,7 @@ def insert_Curso():
     max_id = result[0] if result[0] is not None else 0
     id = max_id + 1
     
-    comando = '''INSERT INTO Curso (nome, id)
-                 VALUES (?, ?)'''
-    cursor.execute(comando, (nome, id))
+    cursor.execute("INSERT INTO Curso (nome, id, id_disciplina) VALUES (?, ?, ?)", (nome, id, id_disciplina))
     
     conexao.commit()
     cursor.execute("SELECT * FROM Curso;")
@@ -99,9 +109,7 @@ def insert_Aluno():
     max_id = result[0] if result[0] is not None else 0
     id = max_id + 1
     
-    comando = '''INSERT INTO Aluno (nome, id, disciplina_id, curso_id)
-                 VALUES (?, ?, ?, ?)'''
-    cursor.execute(comando, (nome, id, disciplina_id, curso_id))
+    cursor.execute("INSERT INTO Aluno (nome, id, disciplina_id, curso_id) VALUES (?, ?, ?, ?)", (nome, id, disciplina_id, curso_id))
     
     conexao.commit()
     cursor.execute("SELECT * FROM Aluno;")
@@ -125,9 +133,7 @@ def insert_Professor():
     max_id = result[0] if result[0] is not None else 0
     id = max_id + 1
     
-    comando = '''INSERT INTO Professor (nome, id, curso_id, disciplina_id)
-                 VALUES (?, ?, ?, ?)'''
-    cursor.execute(comando, (nome, id, curso_id, disciplina_id))
+    cursor.execute("INSERT INTO Professor (nome, id, curso_id, disciplina_id) VALUES (?, ?, ?, ?)", (nome, id, curso_id, disciplina_id))
     
     conexao.commit()
     cursor.execute("SELECT * FROM Professor;")
@@ -139,8 +145,10 @@ def insert_Professor():
     
 def procurar_curso():
     os.system('clear')
-    comando = '''SELECT * FROM Curso'''
-    cursor.execute(comando)
+    conexao = connect.connect("Banco.db")
+    cursor = conexao.cursor()
+
+    cursor.execute("SELECT * FROM Curso")
     result = cursor.fetchall()
     if result:
         print("-------Cursos------")
@@ -149,12 +157,12 @@ def procurar_curso():
             print("ID: ", resultado[1])
             print("--------------------")
     else:
-        print("Nennhum curso cadastrado")
-        
+        os.system('clear')
+        print("Nenhum curso cadastrado")
+    
     curso_id = input("--------------------\nID do Curso: ")
     os.system('clear')
-    comando = '''SELECT * FROM Aluno WHERE curso_id = ?;'''
-    cursor.execute(comando, (curso_id,))
+    cursor.execute("SELECT * FROM Aluno WHERE curso_id = ?", (curso_id,))
     resultados = cursor.fetchall()
     if resultados:
         print("Resultado da busca:")
@@ -163,25 +171,32 @@ def procurar_curso():
             print("Nome:", resultado[0])
             print("-----------------")
     else:
+        os.system('clear')
         print("Nenhum aluno encontrado matriculado neste curso.")
+
+    cursor.close()
+    conexao.close()
 
 def procurar_disciplina():
     os.system('clear')
-    comando = ''' SELECT * FROM Disciplina '''
-    cursor.execute(comando)
+    conexao = connect.connect("Banco.db")
+    cursor = conexao.cursor()
+
+    cursor.execute("SELECT * FROM Disciplina")
     result = cursor.fetchall()
     if result:
-        print ("----------Disciplinas----------")
+        print("----------Disciplinas----------")
         for resultados in result:
             print("ID: ", resultados[0])    
             print("Nome: ", resultados[1])
             print("------------------------------")
     else:
+        os.system("clear")
         print("Sem disciplinas cadastradas")
+        
     id_disciplina = input("------------------------------\nID da Disciplina: ")
     os.system('clear') 
-    comando = ''' SELECT * FROM Aluno WHERE disciplina_id = ?;'''
-    cursor.execute(comando, (id_disciplina))
+    cursor.execute("SELECT * FROM Aluno WHERE disciplina_id = ?", (id_disciplina,))
     resultado = cursor.fetchall()
     if resultado:
         print("Resultado da Busca: ")
@@ -190,8 +205,83 @@ def procurar_disciplina():
             print("Nome: ", resultados[1])
             print("----------------------------")
     else:
+        os.system('clear')
         print("Não há alunos matriculados nessa disciplina")
+
+    cursor.close()
+    conexao.close()
+   
+def procurar_professor_curso():
+    os.system('clear')
+    conexao = connect.connect("Banco.db")
+    cursor = conexao.cursor()
+    
+    cursor.execute(''' SELECT * FROM Curso ''')
+    result = cursor.fetchall()
+
+    if result:
+        print("------Cursos------")
+        for resultado in result:
+            print("Nome: ",resultado[0])
+            print("ID: ", resultado[1]) 
+            print("-----------------")       
+    else:
+        os.system('clear')
+        print("Não cursos cadastrados!")
+     
+    id_curso = input("-----------------\n ID do curso: ")
+    os.system('clear')   
+    cursor.execute(''' SELECT * FROM Professor WHERE curso_id=?''', (id_curso))
+    resultado = cursor.fetchall()
+    
+    if resultado:
+        print("-----Professores-----")
+        for resultados in resultado:
+            print("Nome: ", resultados[0])
+            print("ID: ", resultados[1])
+            print('---------------------')
+    else:
+        os.system("clear")
+        print("Nao ha professore administrando esse curso")
         
+    cursor.close()
+    conexao.close()
+ 
+def procurar_professor_disciplina():
+    os.system('clear')
+    conexao = connect.connect("Banco.db")
+    cursor = conexao.cursor()
+    
+    cursor.execute(''' SELECT * FROM Disciplina ''')
+    result = cursor.fetchall()
+    
+    if result:
+        print("-----Professores-----")
+        for resultado in result:
+            print("Nome: ", resultado[0])
+            print("ID: ", resultado[1])
+            print("---------------------")
+    else: 
+        os.system('clear')
+        print("Nao ha professores cadastrados nas disciplinas")
+        
+    id_disciplina = input("------------------\nID da disciplina: ")   
+    os.system('clear')
+    cursor.execute(''' SELECT * FROM Professor WHERE disciplina_id = ?; ''', (id_disciplina))
+    resultado = cursor.fetchall()
+    if resultado:
+        print("-----Professores-----")
+        for resultados in resultado:
+            print("Nome: ", resultados[0])
+            print("ID: ", resultados[1])
+            print("---------------------")
+    else: 
+        os.system("clear")
+        print("Nao ha professres ministrando essa disciplina!")
+        
+    cursor.close()
+    conexao.close()
+           
 try:        
     conexao = connect.connect("Banco.db")
     cursor = conexao.cursor()
@@ -200,6 +290,14 @@ try:
                         id INTEGER NOT NULL,
                         PRIMARY KEY (id)
                      );''')
+    
+    cursor.execute(''' CREATE TABLE IF NOT EXISTS Curso(
+                        nome TEXT NOT NULL,
+                        id INTEGER NOT NULL,
+                        id_disciplina INTEGER,
+                        PRIMARY KEY (id),
+                        FOREIGN KEY (id_disciplina) REFERENCES Disciplina(id)
+                    );''')
 
     cursor.execute('''CREATE TABLE IF NOT EXISTS Aluno (
                         nome TEXT NOT NULL,
@@ -227,7 +325,6 @@ except connect.Error as e:
     print("Erro ao acessar o banco de dados:", e)
 
 finally:
-    # Fechar o cursor e a conexão
     if cursor:
         cursor.close()
     if conexao:
