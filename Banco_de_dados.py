@@ -68,7 +68,7 @@ def menu():
             break
         else:
             os.system('cls')
-
+    
 def insert_Disciplina():
     os.system('cls')
     nome = input("Nome da Disciplina?: ").strip()
@@ -87,6 +87,7 @@ def insert_Disciplina():
             print('----------------------------')
     else:
         print("Nao ha professores disponiveis!")
+        insert_Professor()
     
     id_professor = input("Qual professor sera responsavel pela Disciplina?: ")
     
