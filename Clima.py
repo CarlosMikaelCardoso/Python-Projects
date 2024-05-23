@@ -56,6 +56,7 @@ def requisicao():
 # Criar a janela
 root = tk.Tk()
 root.title("Clima")
+root.resizable(False,False)
 
 # Caixa de entrada para o nome da cidade
 entrada_cidade = tk.Entry(root)
