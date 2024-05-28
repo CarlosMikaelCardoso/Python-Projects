@@ -10,12 +10,13 @@ def menu():
         op = int(input(": "))
         
         if op == 1:
-            os.system('cls')
+            os.system('clear')
             print("------------------TABELAS----------------")
             print("1 - Curso")
             print("2 - Disciplina")
             print("3 - Aluno")
             print("4 - Professores")
+
             op = int(input(": "))
             if op == 1:
                 insert_Curso()
@@ -26,9 +27,9 @@ def menu():
             elif op == 4:
                 insert_Professor()
             else:
-                os.system('cls')
+                os.system('clear')
         elif op == 2:
-            os.system('cls')
+            os.system('clear')
             print("------------Procurar-------------")
             print("1 - Aluno por Curso")
             print("2 - Aluno por Disciplina")
@@ -40,37 +41,38 @@ def menu():
             if op == 1:
                 procurar_curso()
                 input("Presione enter para continuar")
-                os.system("cls")
+                os.system("clear")
             elif op == 2:
                 procurar_disciplina()
                 input("Presione enter para continuar")
-                os.system("cls")
+                os.system("clear")
             elif op == 3:
                 procurar_professor_curso()
                 input("Presione enter para continuar")
-                os.system("cls")
+                os.system("clear")
             elif op == 4:
                 procurar_professor_disciplina()
                 input("Presione enter para continuar")
-                os.system("cls")
+                os.system("clear")
             elif op == 5:
                 procurar_disciplina_curso()
                 input("Presione enter para continuar")
-                os.system("cls")
+                os.system("clear")
             elif op == 6:
                 procurar_aluno_diciplina_professor()
                 input("Presione enter para continuar")
-                os.system("cls")
+                os.system("clear")
             else:
-                os.system('cls')
+                os.system('clear')
+                
         elif op == 3:
-            os.system('cls')
+            os.system('clear')
             break
         else:
-            os.system('cls')
-    
+            os.system('clear')
+  
 def insert_Disciplina():
-    os.system('cls')
+    os.system('clear')
     nome = input("Nome da Disciplina?: ").strip()
     id_curso = input("ID da curso associada á Disciplina: ")
         
@@ -107,7 +109,7 @@ def insert_Disciplina():
     conexao.close()
 
 def insert_Curso():
-    os.system('cls')
+    os.system('clear')
     nome = input("Nome do Curso?: ").strip()
     
     conexao = connect.connect("Banco.db")
@@ -129,7 +131,7 @@ def insert_Curso():
     conexao.close()
 
 def insert_Aluno():
-    os.system('cls')
+    os.system('clear')
     nome = input("Nome do Aluno?: ").strip()
     curso_id = int(input("ID do Curso?: "))
     disciplina_id = int(input("ID da Disciplina?: "))
@@ -153,7 +155,7 @@ def insert_Aluno():
     conexao.close()
 
 def insert_Professor():
-    os.system('cls')
+    os.system('clear')
     nome = input("Nome do Professor?: ").strip()
     curso_id = int(input("ID do Curso?: "))
     disciplina_id = int(input("ID da Disciplina?: "))
@@ -177,7 +179,7 @@ def insert_Professor():
     conexao.close()
     
 def procurar_curso():
-    os.system('cls')
+    os.system('clear')
     conexao = connect.connect("Banco.db")
     cursor = conexao.cursor()
 
@@ -190,11 +192,11 @@ def procurar_curso():
             print("ID: ", resultado[1])
             print("--------------------")
     else:
-        os.system('cls')
+        os.system('clear')
         print("Nenhum curso cadastrado")
     
     curso_id = input("ID do Curso: ")
-    os.system('cls')
+    os.system('clear')
     cursor.execute("SELECT * FROM Aluno WHERE curso_id = ?", (curso_id,))
     resultados = cursor.fetchall()
     if resultados:
@@ -204,14 +206,14 @@ def procurar_curso():
             print("Nome:", resultado[0])
             print("-----------------")
     else:
-        os.system('cls')
+        os.system('clear')
         print("Nenhum aluno encontrado matriculado neste curso.")
 
     cursor.close()
     conexao.close()
 
 def procurar_disciplina():
-    os.system('cls')
+    os.system('clear')
     conexao = connect.connect("Banco.db")
     cursor = conexao.cursor()
 
@@ -224,12 +226,12 @@ def procurar_disciplina():
             print("Nome: ", resultados[1])
             print("------------------------------")
     else:
-        os.system("cls")
+        os.system("clear")
         print("Sem disciplinas cadastradas")
         return
         
     id_disciplina = input("ID da Disciplina: ")
-    os.system('cls') 
+    os.system('clear') 
     cursor.execute("SELECT * FROM Aluno WHERE disciplina_id = ?", (id_disciplina,))
     resultado = cursor.fetchall()
     if resultado:
@@ -239,14 +241,14 @@ def procurar_disciplina():
             print("Nome: ", resultados[1])
             print("----------------------------")
     else:
-        os.system('cls')
+        os.system('clear')
         print("Não há alunos matriculados nessa disciplina")
 
     cursor.close()
     conexao.close()
    
 def procurar_professor_curso():
-    os.system('cls')
+    os.system('clear')
     conexao = connect.connect("Banco.db")
     cursor = conexao.cursor()
     
@@ -260,12 +262,12 @@ def procurar_professor_curso():
             print("ID: ", resultado[1]) 
             print("-----------------")       
     else:
-        os.system('cls')
-        print("Não cursos cadastrados!")
+        os.system('clear')
+        print("Não há cursos cadastrados!")
         return
      
     id_curso = input("ID do curso: ")
-    os.system('cls')   
+    os.system('clear')   
     cursor.execute(''' SELECT * FROM Professor WHERE curso_id=?''', (id_curso))
     resultado = cursor.fetchall()
     
@@ -276,14 +278,14 @@ def procurar_professor_curso():
             print("ID: ", resultados[1])
             print('---------------------')
     else:
-        os.system("cls")
+        os.system("clear")
         print("Nao ha professore administrando esse curso")
         
     cursor.close()
     conexao.close()
  
 def procurar_professor_disciplina():
-    os.system('cls')
+    os.system('clear')
     conexao = connect.connect("Banco.db")
     cursor = conexao.cursor()
     
@@ -297,12 +299,12 @@ def procurar_professor_disciplina():
             print("ID: ", resultado[1])
             print("---------------------")
     else: 
-        os.system('cls')
+        os.system('clear')
         print("Nao ha professores cadastrados nas disciplinas")
         return
         
     id_disciplina = input("ID da disciplina: ")   
-    os.system('cls')
+    os.system('clear')
     cursor.execute(''' SELECT * FROM Professor WHERE disciplina_id = ?; ''', (id_disciplina))
     resultado = cursor.fetchall()
     if resultado:
@@ -312,14 +314,14 @@ def procurar_professor_disciplina():
             print("ID: ", resultados[1])
             print("---------------------")
     else: 
-        os.system("cls")
+        os.system("clear")
         print("Nao ha professres ministrando essa disciplina!")
         
     cursor.close()
     conexao.close()
   
 def procurar_disciplina_curso():
-    os.system('cls')
+    os.system('clear')
     conexao = connect.connect("Banco.db")
     cursor = conexao.cursor()
     
@@ -334,7 +336,7 @@ def procurar_disciplina_curso():
             print("------------------")
             
     else: 
-        os.system("cls")
+        os.system("clear")
         print("Nao ha curso cadastrados!")
         return
     
@@ -344,7 +346,7 @@ def procurar_disciplina_curso():
     resultado = cursor.fetchall()
     
     if resultado:
-        os.system('cls')
+        os.system('clear')
         print("-----Disciplinas------")
         for resultados in resultado:
             print("Nome: ", resultados[0])
@@ -352,14 +354,14 @@ def procurar_disciplina_curso():
             print("----------------------")
 
     else:
-        os.system("cls")
+        os.system("clear")
         print("Nao ha disciplinas cadastradas nesse curso")
         
     cursor.close()
     conexao.close()
 
 def procurar_aluno_diciplina_professor():
-    os.system('cls')
+    os.system('clear')
     conexao = connect.connect("Banco.db")
     cursor = conexao.cursor()
 
@@ -367,51 +369,51 @@ def procurar_aluno_diciplina_professor():
     result = cursor.fetchall()
 
     if result:
-        os.system("cls")
+        os.system("clear")
         print("----- Disciplinas -----")
         for resultado in result:
             print("Nome: ", resultado[0]) 
             print("ID: ", resultado[1])
             print("-----------------------")
     else:
-        os.system("cls")
+        os.system("clear")
         print("Não há disciplinas cadastradas!")
         return
 
     id_disciplina = input("ID da disciplina: ")
-    os.system("cls")
+    os.system("clear")
     
     cursor.execute('''SELECT Professor.* FROM Professor JOIN Disciplina ON Professor.id = Disciplina.id_professor WHERE Disciplina.id = ?''', (id_disciplina,))
     resultado = cursor.fetchall()
 
     if resultado:
-        os.system("cls")
+        os.system("clear")
         print("----- Professores -----")
         for professor in resultado:
             print("Nome: ", professor[0])
             print("ID: ", professor[1])
             print("-----------------------")
     else:
-        os.system("cls")
+        os.system("clear")
         print("Não há professor nesta disciplina!")
         return
 
     id_professor = input("ID do professor: ")
-    os.system("cls")
+    os.system("clear")
 
 
     cursor.execute('''SELECT Aluno.* FROM Aluno JOIN Disciplina ON Aluno.disciplina_id = Disciplina.id WHERE Disciplina.id = ? AND Disciplina.id_professor = ? ''', (id_disciplina, id_professor))
     alunos = cursor.fetchall()
 
     if alunos:
-        os.system("cls")
+        os.system("clear")
         print("----- Alunos -----")
         for aluno in alunos:
             print("Nome: ", aluno[0])
             print("ID: ", aluno[1]) 
             print("------------------")
     else:
-        os.system("cls")
+        os.system("clear")
         print("Não há alunos nessa disciplina ministrada por esse professor!")
 
     cursor.close()
