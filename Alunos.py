@@ -7,7 +7,7 @@ def error():
     #Mensagem após errar senha ou usuário de Login
     erro = tk.Tk()
     erro.title("Erro")
-    erro_label = tk.Label(erro, text="Usuário/Senha incorreto!")
+    erro_label = tk.Label(erro, text="Usuário/Senha incorretos!")
     erro_label.pack()
 
 def inicio():
@@ -142,7 +142,7 @@ def adicionar_aluno():
 
     if qalunos == 0:
         #Depois da inserção dos alunos, e mostrado um planilha com as informações
-        with open('arquivo.txt', 'w') as f:
+        with open('arquivo.txt', 'a') as f:
             f.write('\n'.join(resultado))   
         notas()      
         nome_alunos.pack_forget()
@@ -153,7 +153,6 @@ def adicionar_aluno():
         botao_adicionar.pack_forget()
 
 def notas():
-    #Criação da planilha com a biblioteca Pandas
     global tabela
     nota = tk.Tk()
     nota.title("Notas")
@@ -162,7 +161,7 @@ def notas():
     tabela['columns'] = ('ID', 'Nome', 'Nota')
 
     # Define as colunas
-    tabela.column('#0', width=0, stretch=tk.NO)  # Coluna invisível
+    tabela.column('#0', width=0, stretch=tk.NO) 
     tabela.column('ID', anchor=tk.CENTER, width=100)
     tabela.column('Nome', anchor=tk.W, width=150)
     tabela.column('Nota', anchor=tk.CENTER, width=100)
@@ -224,6 +223,7 @@ def excluir():
     #Janela de Excluir Alunos
     excluir1 = tk.Tk()
     excluir1.title("Excluir")
+    excluir1.geometry("200x200")
     notas()
     excluir_label = tk.Label(excluir1, text="ID")
     excluir_label.pack()
