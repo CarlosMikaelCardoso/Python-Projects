@@ -1,5 +1,15 @@
 import tkinter as tk
-import sqlite3 as connect  
+import sqlite3 as connect 
+import random
+#Gerador de numeros
+
+def gerar_numeros_aleatorios_unicos(quantidade, limite_inferior, limite_superior):
+    return random.sample(range(limite_inferior, limite_superior), quantidade)
+
+def adicionar_prefixo(numeros, prefixo):
+    return str(prefixo) + ''.join(f'{numero:01}' for numero in numeros)
+
+
 
 #Def's
 def error():
@@ -8,25 +18,92 @@ def error():
     erro.title("Erro")
     erro_label = tk.Label(erro, text="Usuário/Senha incorretos!")
     erro_label.pack()
-    
+#Alunos    
 def aluno():
     #Janela do Aluno, Consulta o Nome do Aluno
     alunos = tk.Toplevel()
     alunos.title("Alunos")
     nome_label = tk.Label(alunos, text="Nome")
     nome_label.pack()
-
+#Professor
 def janela_professor():
     #Janela do Professor, Tem as funções Adicionar, Checar e Excluir
     professor = tk.Toplevel()
     professor.title("Professor")
     professor.geometry("250x300")
-
+#Diretor
 def diretor():
     janela_diretor = tk.Toplevel()
     janela_diretor.title("Diretor")
     janela_diretor.geometry("600x300")   
+    
+    cad_aluno = tk.Button(janela_diretor,text="Cadastrar aluno", command=add_aluno_janela)
+    cad_aluno.grid(row=0,column=0,padx=5,pady=5,sticky=tk.W)
+    
+    del_alunos = tk.Button(janela_diretor,text="Deletar Aluno")
+    del_alunos.grid(row=1,column=0,padx=5,pady=5,sticky=tk.W)   
+    
+    cad_professor = tk.Button(janela_diretor, text="Cadastrar Professor")
+    cad_professor.grid(row=0,column=1,padx=5,pady=5,sticky=tk.W) 
+    
+    del_professor = tk.Button(janela_diretor, text="Deletear Professor")
+    del_professor.grid(row=1,column=1,padx=5,pady=5,sticky=tk.W)
 
+def add_aluno_janela():
+    global nome_entry, curso_entry, disciplina_entry
+    add_janela = tk.Toplevel()
+    add_janela.title("Cadastro de aluno")
+    add_janela.geometry("200x200")
+
+    nome = tk.Label(add_janela, text="Aluno")
+    nome.grid(row=0,column=0,padx=5,pady=5)
+    nome_entry = tk.Entry(add_janela)
+    nome_entry.grid(row=0,column=1,padx=5,pady=5)
+    
+    curso = tk.Label(add_janela, text="Curso")
+    curso.grid(row=1,column=0,padx=5,pady=5)
+    curso_entry = tk.Entry(add_janela)
+    curso_entry.grid(row=1,column=1,padx=5,pady=5)
+    
+    disciplina = tk.Label(add_janela, text="Disciplina")
+    disciplina.grid(row=2,column=0,padx=5,pady=5)
+    disciplina_entry = tk.Entry(add_janela)
+    disciplina_entry.grid(row=2,column=1,padx=5,pady=5)
+    
+    add_button = tk.Button(add_janela, text="Enter", command=lambda: add_aluno(nome_entry.get(),curso_entry.get(),disciplina_entry.get()))
+    add_button.grid(row=3,column=0,padx=5,pady=5)
+    
+
+
+def add_aluno(nome,curso,disciplina):    
+    nome_entry.delete(0, 'end')
+    curso_entry.delete(0,'end')
+    disciplina_entry.delete(0, 'end')
+    conexao = connect.connect("Trabalho.db")
+    cursor = conexao.cursor()
+    # Parâmetros
+    quantidade_numeros = 8
+    limite_inferior = 0
+    limite_superior = 10 # Limite ajustado para garantir dois dígitos para cada número gerado
+
+    # Gerar números aleatórios únicos
+    numeros_aleatorios = gerar_numeros_aleatorios_unicos(quantidade_numeros, limite_inferior, limite_superior)
+
+    # Adicionar o prefixo "2024"
+    numero_completo_str = adicionar_prefixo(numeros_aleatorios, 2024)
+
+    # Converter para inteiro
+    numero_de_matricula = int(numero_completo_str)
+
+    # Exibir o resultado
+    print(numero_de_matricula)
+    
+    cursor.execute('''INSERT INTO Alunos(ID,Nome,Curso,Disciplina) VALUES (?, ?, ?, ?)''',(numero_de_matricula,nome,curso,disciplina))
+    
+    conexao.commit()
+    cursor.close()
+    conexao.close()
+#--------------------------------------
 def autenticacao():
     #Janela de Login
     global autenticar, user, senha, user_entry, senha_entry
@@ -67,25 +144,37 @@ def verificacao(user,senha):
 def iniciar_db():
     conexao = connect.connect("Trabalho.db")
     cursor = conexao.cursor()
-    cursor.execute('''CREATE TABLE IF NOT EXISTS Professor(
-                id INTEGER NOT NULL,
-                nome TEXT PRIMARY KEY,
-                Disciplina TEXT,
-                FOREIGN KEY (Disciplina) REFERENCES Disciplinas(nome)
-            );''')
     
-    cursor.execute('''CREATE TABLE IF NOT EXISTS Disciplinas(
-                    id INTEGER NOT NULL,
-                    nome TEXT PRIMARY KEY,
-                    Professor TEXT,
-                    FOREIGN KEY (Professor) REFERENCES Professor(nome)
+    cursor.execute('''CREATE TABLE IF NOT EXISTS Cursos(
+                ID INTEGER NOT NULL,
+                Nome TEXT PRIMARY KEY
                 );''')
     
+    cursor.execute('''CREATE TABLE IF NOT EXISTS Professor(
+                ID INTEGER NOT NULL,
+                Nome TEXT PRIMARY KEY,
+                Curso TEXT,
+                Disciplina TEXT,
+                FOREIGN KEY (Curso) REFERENCES Cursos(Nome)
+                FOREIGN KEY (Disciplina) REFERENCES Disciplinas(Nome)
+                 );''')
+    
+    cursor.execute('''CREATE TABLE IF NOT EXISTS Disciplinas(
+                    ID INTEGER NOT NULL,
+                    Nome TEXT PRIMARY KEY,
+                    Curso TEXT,
+                    Professor TEXT,
+                    FOREIGN KEY (Curso) REFERENCES Cursos(Nome)
+                    FOREIGN KEY (Professor) REFERENCES Professor(Nome)
+                );''')
+
     cursor.execute('''CREATE TABLE IF NOT EXISTS Alunos(
-                    id INTEGER NOT NULL, 
-                    nome TEXT,
+                    ID INTEGER NOT NULL, 
+                    Nome TEXT,
+                    Curso TEXT,
                     Disciplina TEXT,
-                    FOREIGN KEY (Disciplina) REFERENCES Disciplinas(nome)
+                    FOREIGN KEY (Curso) REFERENCES Cursos(Nome)
+                    FOREIGN KEY (Disciplina) REFERENCES Disciplinas(Nome)
                 );''')
     
     conexao.commit()
