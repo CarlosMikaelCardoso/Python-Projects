@@ -1,5 +1,5 @@
 import tkinter as tk
-import sqlite3 as connect 
+import sqlite3 as net 
 import random
 #Gerador de numeros
 
@@ -31,6 +31,7 @@ def janela_professor():
     professor = tk.Toplevel()
     professor.title("Professor")
     professor.geometry("250x300")
+
 #Diretor
 def diretor():
     janela_diretor = tk.Toplevel()
@@ -40,20 +41,20 @@ def diretor():
     cad_aluno = tk.Button(janela_diretor,text="Cadastrar aluno", command=add_aluno_janela)
     cad_aluno.grid(row=0,column=0,padx=5,pady=5,sticky=tk.W)
     
-    del_alunos = tk.Button(janela_diretor,text="Deletar Aluno")
+    del_alunos = tk.Button(janela_diretor,text="Deletar Aluno", command=del_alunos_janela)
     del_alunos.grid(row=1,column=0,padx=5,pady=5,sticky=tk.W)   
     
-    cad_professor = tk.Button(janela_diretor, text="Cadastrar Professor")
+    cad_professor = tk.Button(janela_diretor, text="Cadastrar Professor", command=add_professor_janela)
     cad_professor.grid(row=0,column=1,padx=5,pady=5,sticky=tk.W) 
     
-    del_professor = tk.Button(janela_diretor, text="Deletear Professor")
-    del_professor.grid(row=1,column=1,padx=5,pady=5,sticky=tk.W)
-
+    del_professor = tk.Button(janela_diretor, text="Deletear Professor", command=del_professor_janela)
+    del_professor.grid(row=1,column=1,padx=5,pady=5,sticky=tk.W)    
+#Add_alunos----------------------------
 def add_aluno_janela():
     global nome_entry, curso_entry, disciplina_entry
     add_janela = tk.Toplevel()
     add_janela.title("Cadastro de aluno")
-    add_janela.geometry("200x200")
+    add_janela.geometry("200x300")
 
     nome = tk.Label(add_janela, text="Aluno")
     nome.grid(row=0,column=0,padx=5,pady=5)
@@ -71,15 +72,12 @@ def add_aluno_janela():
     disciplina_entry.grid(row=2,column=1,padx=5,pady=5)
     
     add_button = tk.Button(add_janela, text="Enter", command=lambda: add_aluno(nome_entry.get(),curso_entry.get(),disciplina_entry.get()))
-    add_button.grid(row=3,column=0,padx=5,pady=5)
-    
-
-
-def add_aluno(nome,curso,disciplina):    
+    add_button.grid(row=3,column=0,padx=5,pady=5)  
+def add_aluno(nome,curso,disciplina):
     nome_entry.delete(0, 'end')
     curso_entry.delete(0,'end')
-    disciplina_entry.delete(0, 'end')
-    conexao = connect.connect("Trabalho.db")
+    disciplina_entry.delete(0, 'end')    
+    conexao = net.connect("Trabalho.db")
     cursor = conexao.cursor()
     # Parâmetros
     quantidade_numeros = 8
@@ -104,6 +102,108 @@ def add_aluno(nome,curso,disciplina):
     cursor.close()
     conexao.close()
 #--------------------------------------
+#Delete_alunos-------------------------
+def del_alunos_janela():
+    global id_entry
+    del_janela = tk.Toplevel()
+    del_janela.title("Deletar Aluno")
+    del_janela.geometry("200x300")
+    
+    id = tk.Label(del_janela, text="ID")
+    id.grid(row=0,column=0,padx=5,pady=5)
+    id_entry = tk.Entry(del_janela)
+    id_entry.grid(row=0,column=1,padx=5,pady=5)
+    
+    del_button = tk.Button(del_janela, text="Enter", command=lambda: del_aluno(id_entry.get()))
+    del_button.grid(row=1,column=0, padx=5,pady=5)
+def del_aluno(Id):
+    id_entry.delete(0, 'end')
+    conexao = net.connect("Trabalho.db")
+    cursor = conexao.cursor()
+    
+    cursor.execute('''DELETE FROM Alunos WHERE ID = ?''', (Id,))
+    
+    conexao.commit()
+    cursor.close()
+    conexao.close()
+#--------------------------------------    
+#Add_Professor-------------------------
+def add_professor_janela():
+    global nome_entry, curso_entry, disciplina_entry
+    add_p_janela = tk.Toplevel()
+    add_p_janela.title("Cadastrar Professor")
+    add_p_janela.geometry("300x200")
+
+    nome = tk.Label(add_p_janela, text="Professor")
+    nome.grid(row=0,column=0,padx=5,pady=5)
+    nome_entry = tk.Entry(add_p_janela)
+    nome_entry.grid(row=0,column=1,padx=5,pady=5)
+    
+    curso = tk.Label(add_p_janela, text="Curso")
+    curso.grid(row=1,column=0,padx=5,pady=5)
+    curso_entry = tk.Entry(add_p_janela)
+    curso_entry.grid(row=1,column=1,padx=5,pady=5)
+    
+    disciplina = tk.Label(add_p_janela, text="Disciplina")
+    disciplina.grid(row=2,column=0,padx=5,pady=5)
+    disciplina_entry = tk.Entry(add_p_janela)
+    disciplina_entry.grid(row=2,column=1,padx=5,pady=5)
+    
+    add_button = tk.Button(add_p_janela, text="Enter", command=lambda: add_professor(nome_entry.get(),curso_entry.get(),disciplina_entry.get()))
+    add_button.grid(row=3,column=0,padx=5,pady=5)   
+def add_professor(nome, curso, disciplina):
+    nome_entry.delete(0, 'end')
+    curso_entry.delete(0,'end')
+    disciplina_entry.delete(0, 'end')    
+    conexao = net.connect("Trabalho.db")
+    cursor = conexao.cursor()
+    # Parâmetros
+    quantidade_numeros = 5
+    limite_inferior = 0
+    limite_superior = 10 # Limite ajustado para garantir dois dígitos para cada número gerado
+    # Gerar números aleatórios únicos
+    numeros_aleatorios = gerar_numeros_aleatorios_unicos(quantidade_numeros, limite_inferior, limite_superior)
+    # Adicionar o prefixo "2024"
+    numero_completo_str = adicionar_prefixo(numeros_aleatorios, 2024)
+    # Converter para inteiro
+    numero_de_matricula = int(numero_completo_str)
+    # Exibir o resultado
+    print(numero_de_matricula)
+    
+    cursor.execute('''INSERT INTO Professor (ID,Nome,Curso,Disciplina) VALUES (?, ?, ?, ?)''',(numero_de_matricula,nome,curso,disciplina))
+    
+    conexao.commit()
+    cursor.close()
+    conexao.close()
+#--------------------------------------
+#Delete_professor----------------------
+def del_professor_janela():
+    global id_entry
+    del_janela = tk.Toplevel()
+    del_janela.title("Deletar Professor")
+    del_janela.geometry("300x200")
+    
+    id = tk.Label(del_janela, text="ID")
+    id.grid(row=0,column=0,padx=5,pady=5)
+    id_entry = tk.Entry(del_janela)
+    id_entry.grid(row=0,column=1,padx=5,pady=5)
+    
+    del_button = tk.Button(del_janela, text="Enter", command=lambda: del_professor(id_entry.get()))
+    del_button.grid(row=1,column=0, padx=5,pady=5)   
+def del_professor(Id):
+    id_entry.delete(0, 'end')
+    conexao = net.connect("Trabalho.db")
+    cursor = conexao.cursor()
+    
+    cursor.execute('''DELETE FROM Professor WHERE ID = ?''', (Id,))
+    
+    conexao.commit()
+    cursor.close()
+    conexao.close()
+
+
+
+
 def autenticacao():
     #Janela de Login
     global autenticar, user, senha, user_entry, senha_entry
@@ -142,7 +242,7 @@ def verificacao(user,senha):
         error()
 
 def iniciar_db():
-    conexao = connect.connect("Trabalho.db")
+    conexao = net.connect("Trabalho.db")
     cursor = conexao.cursor()
     
     cursor.execute('''CREATE TABLE IF NOT EXISTS Cursos(
