@@ -32,7 +32,12 @@ def janela_professor():
     professor.title("Professor")
     professor.geometry("250x300")
 
-#Diretor
+
+
+
+
+
+#Diretor-------------------------------|
 def diretor():
     janela_diretor = tk.Toplevel()
     janela_diretor.title("Diretor")
@@ -49,7 +54,19 @@ def diretor():
     
     del_professor = tk.Button(janela_diretor, text="Deletear Professor", command=del_professor_janela)
     del_professor.grid(row=1,column=1,padx=5,pady=5,sticky=tk.W)    
-#Add_alunos----------------------------
+    
+    cad_disciplina = tk.Button(janela_diretor, text="Cadastrar Disciplina", command=add_disciplina_janela)
+    cad_disciplina.grid(row=0,column=2,padx=5,pady=5)
+    
+    del_disciplina = tk.Button(janela_diretor, text="Deletear Disciplina", command=del_disciplina_janela)
+    del_disciplina.grid(row=1,column=2,padx=5,pady=5,sticky=tk.W)  
+    
+    cad_curso = tk.Button(janela_diretor, text="Cadastrar Curso", command=add_curso_janela)
+    cad_curso.grid(row=0,column=3,padx=5,pady=5)
+    
+    del_curso = tk.Button(janela_diretor, text="Deletear Curso", command=del_curso_janela)
+    del_curso.grid(row=1,column=3,padx=5,pady=5,sticky=tk.W)    
+#Add_alunos----------------------------|
 def add_aluno_janela():
     global nome_entry, curso_entry, disciplina_entry
     add_janela = tk.Toplevel()
@@ -101,8 +118,8 @@ def add_aluno(nome,curso,disciplina):
     conexao.commit()
     cursor.close()
     conexao.close()
-#--------------------------------------
-#Delete_alunos-------------------------
+#--------------------------------------| 
+#Delete_alunos-------------------------|
 def del_alunos_janela():
     global id_entry
     del_janela = tk.Toplevel()
@@ -126,8 +143,8 @@ def del_aluno(Id):
     conexao.commit()
     cursor.close()
     conexao.close()
-#--------------------------------------    
-#Add_Professor-------------------------
+#--------------------------------------|   
+#Add_Professor-------------------------|
 def add_professor_janela():
     global nome_entry, curso_entry, disciplina_entry
     add_p_janela = tk.Toplevel()
@@ -175,8 +192,8 @@ def add_professor(nome, curso, disciplina):
     conexao.commit()
     cursor.close()
     conexao.close()
-#--------------------------------------
-#Delete_professor----------------------
+#--------------------------------------|
+#Delete_professor----------------------|
 def del_professor_janela():
     global id_entry
     del_janela = tk.Toplevel()
@@ -200,10 +217,137 @@ def del_professor(Id):
     conexao.commit()
     cursor.close()
     conexao.close()
+#--------------------------------------|
+#Add_disciplina------------------------|
+def add_disciplina_janela():
+    global nome_entry, curso_entry, disciplina_entry
+    add_d_janela = tk.Toplevel()
+    add_d_janela.title("Cadastrar Disciplina")
+    add_d_janela.geometry("300x200")
 
+    nome = tk.Label(add_d_janela, text="Disciplina")
+    nome.grid(row=0,column=0,padx=5,pady=5)
+    nome_entry = tk.Entry(add_d_janela)
+    nome_entry.grid(row=0,column=1,padx=5,pady=5)
+    
+    curso = tk.Label(add_d_janela, text="Curso")
+    curso.grid(row=1,column=0,padx=5,pady=5)
+    curso_entry = tk.Entry(add_d_janela)
+    curso_entry.grid(row=1,column=1,padx=5,pady=5)
+    
+    add_button = tk.Button(add_d_janela, text="Enter", command=lambda: add_disciplina(nome_entry.get(),curso_entry.get()))
+    add_button.grid(row=3,column=0,padx=5,pady=5)   
+def add_disciplina(nome, curso):
+    nome_entry.delete(0, 'end')
+    curso_entry.delete(0,'end')    
+    conexao = net.connect("Trabalho.db")
+    cursor = conexao.cursor()
+    # Parâmetros
+    quantidade_numeros = 4
+    limite_inferior = 0
+    limite_superior = 10 # Limite ajustado para garantir dois dígitos para cada número gerado
+    # Gerar números aleatórios únicos
+    numeros_aleatorios = gerar_numeros_aleatorios_unicos(quantidade_numeros, limite_inferior, limite_superior)
+    # Adicionar o prefixo "2024"
+    numero_completo_str = adicionar_prefixo(numeros_aleatorios, 'ARA')
+    # Converter para inteiro
+    numero_de_matricula = str(numero_completo_str)
+    # Exibir o resultado
+    print(numero_de_matricula)
+    
+    cursor.execute('''INSERT INTO Disciplinas (ID,Nome,Curso) VALUES (?, ?, ?)''',(numero_de_matricula,nome,curso))
+    
+    conexao.commit()
+    cursor.close()
+    conexao.close()
+#--------------------------------------|
+#Delete_Disciplina---------------------|
+def del_disciplina_janela():
+    global id_entry
+    del_janela = tk.Toplevel()
+    del_janela.title("Deletar Disciplina")
+    del_janela.geometry("300x200")
+    
+    id = tk.Label(del_janela, text="ID")
+    id.grid(row=0,column=0,padx=5,pady=5)
+    id_entry = tk.Entry(del_janela)
+    id_entry.grid(row=0,column=1,padx=5,pady=5)
+    
+    del_button = tk.Button(del_janela, text="Enter", command=lambda: del_disciplina(id_entry.get()))
+    del_button.grid(row=1,column=0, padx=5,pady=5)   
+def del_disciplina(Id):
+    id_entry.delete(0, 'end')
+    conexao = net.connect("Trabalho.db")
+    cursor = conexao.cursor()
+    
+    cursor.execute('''DELETE FROM Disciplinas WHERE ID = ?''', (Id,))
+    
+    conexao.commit()
+    cursor.close()
+    conexao.close()
+#--------------------------------------|
+#Add_Curso-----------------------------|
+def add_curso_janela():
+    global nome_entry
+    add_c_janela = tk.Toplevel()
+    add_c_janela.title("Cadastrar Curso")
+    add_c_janela.geometry("300x200")
 
-
-
+    nome = tk.Label(add_c_janela, text="Curso")
+    nome.grid(row=0,column=0,padx=5,pady=5)
+    nome_entry = tk.Entry(add_c_janela)
+    nome_entry.grid(row=0,column=1,padx=5,pady=5)
+    
+    add_button = tk.Button(add_c_janela, text="Enter", command=lambda: add_curso(nome_entry.get()))
+    add_button.grid(row=3,column=0,padx=5,pady=5)   
+def add_curso(nome):
+    nome_entry.delete(0, 'end')  
+    conexao = net.connect("Trabalho.db")
+    cursor = conexao.cursor()
+    # Parâmetros
+    quantidade_numeros = 4
+    limite_inferior = 0
+    limite_superior = 10 # Limite ajustado para garantir dois dígitos para cada número gerado
+    # Gerar números aleatórios únicos
+    numeros_aleatorios = gerar_numeros_aleatorios_unicos(quantidade_numeros, limite_inferior, limite_superior)
+    # Adicionar o prefixo "CRS"
+    numero_completo_str = adicionar_prefixo(numeros_aleatorios, 'CRS')
+    # Converter para inteiro
+    numero_de_matricula = str(numero_completo_str)
+    # Exibir o resultado
+    print(numero_de_matricula)
+    
+    cursor.execute('''INSERT INTO Cursos (ID,Nome) VALUES (?, ?)''',(numero_de_matricula,nome))
+    
+    conexao.commit()
+    cursor.close()
+    conexao.close()    
+#--------------------------------------|
+#Delete_curso--------------------------|
+def del_curso_janela():
+    global id_entry
+    del_janela = tk.Toplevel()
+    del_janela.title("Deletar Curso")
+    del_janela.geometry("300x200")
+    
+    id = tk.Label(del_janela, text="ID")
+    id.grid(row=0,column=0,padx=5,pady=5)
+    id_entry = tk.Entry(del_janela)
+    id_entry.grid(row=0,column=1,padx=5,pady=5)
+    
+    del_button = tk.Button(del_janela, text="Enter", command=lambda: del_curso(id_entry.get()))
+    del_button.grid(row=1,column=0, padx=5,pady=5)   
+def del_curso(Id):
+    id_entry.delete(0, 'end')
+    conexao = net.connect("Trabalho.db")
+    cursor = conexao.cursor()
+    
+    cursor.execute('''DELETE FROM Cursos WHERE ID = ?''', (Id,))
+    
+    conexao.commit()
+    cursor.close()
+    conexao.close()
+#--------------------------------------|
 def autenticacao():
     #Janela de Login
     global autenticar, user, senha, user_entry, senha_entry
@@ -223,7 +367,6 @@ def autenticacao():
     senha = "0101"
     verificar_button = tk.Button(autenticar, text="Enter",padx=7, command=lambda:verificacao(user_entry.get(),senha_entry.get()))
     verificar_button.grid(row=3, column=0)
-
 def verificacao(user,senha):
     #Login
     user1 = "Prof"
@@ -240,7 +383,6 @@ def verificacao(user,senha):
     else:
         senha_entry.delete(0, 'end')
         error()
-
 def iniciar_db():
     conexao = net.connect("Trabalho.db")
     cursor = conexao.cursor()
@@ -260,12 +402,10 @@ def iniciar_db():
                  );''')
     
     cursor.execute('''CREATE TABLE IF NOT EXISTS Disciplinas(
-                    ID INTEGER NOT NULL,
+                    ID TEXT NOT NULL,
                     Nome TEXT PRIMARY KEY,
                     Curso TEXT,
-                    Professor TEXT,
                     FOREIGN KEY (Curso) REFERENCES Cursos(Nome)
-                    FOREIGN KEY (Professor) REFERENCES Professor(Nome)
                 );''')
 
     cursor.execute('''CREATE TABLE IF NOT EXISTS Alunos(
@@ -291,13 +431,10 @@ form_frame = tk.Frame()
 form_frame.pack(pady=20)
 
 botao_aluno = tk.Button(form_frame,text="Alunos", command=aluno)
-botao_aluno.grid(row=0,column=0,padx=5,pady=5)
+botao_aluno.grid(row=1,column=0,padx=5,pady=5)
 
-botao_professor = tk.Button(form_frame, text="Professor", command=autenticacao)
-botao_professor.grid(row=0, column=1,padx=5,pady=5)
-
-botao_diretor = tk.Button(form_frame, text="Diretor", command=autenticacao)
-botao_diretor.grid(row=0, column=2,padx=5,pady=5)
+botao_professor = tk.Button(form_frame, text="Login", command=autenticacao)
+botao_professor.grid(row=0, column=0,padx=5,pady=5)
 
 root.mainloop()
 #Progama Principal
