@@ -32,9 +32,53 @@ def janela_professor():
     professor.title("Professor")
     professor.geometry("250x300")
 
+    see_aluno = tk.Button(professor, text="Visualizar\n Aluno",command=procurar_aluno_por_disciplina_janela)
+    see_aluno.grid(row=0,column=0,padx=5,pady=5)
 
+def procurar_aluno_por_disciplina_janela():
+    global disciplina_entry
+    p_aluno = tk.Toplevel()
+    p_aluno.title("Procurar Aluno")
+    p_aluno.geometry("200x300")
+    
+    disciplina = tk.Label(p_aluno, text="Disciplina")
+    disciplina.grid(row=0,column=0, padx=5,pady=5)
+    
+    disciplina_entry = tk.Entry(p_aluno)
+    disciplina_entry.grid(row=0,column=1, padx=5, pady=5)
+    
+    enter = tk.Button(p_aluno, text="Enter", command=lambda: procurar_aluno_por_disciplina(disciplina_entry.get()))
+    enter.grid(row=1,column=0, padx=5,pady=5)
+    
+def procurar_aluno_por_disciplina(disciplina):
+    disciplina_entry.delete(0, 'end')
+    conexao = net.connect("Trabalho.db")
+    cursor = conexao.cursor()
+    
+    info_janela = tk.Toplevel()
+    info_janela.title("Alunos")
+    info_janela.withdraw()
+    
+    info_label = tk.Label(info_janela,text='')
+    info_label.pack()
+    
+    cursor.execute('''SELECT * FROM Alunos JOIN Disciplinas ON Alunos.Disciplina = Disciplinas.Nome WHERE Disciplina = ?''', (disciplina,))
+    alunos = cursor.fetchall()
+    info = ""
 
+    if alunos:
+        for aluno in alunos:
+            info += f"ID: {aluno[0]} | Nome: {aluno[1]} | Curso: {aluno[2]} | Disciplina: {aluno[3]} |\n"
+    
+    info_janela.deiconify()
+    info_label.config(text=info)
 
+    
+    conexao.commit()
+    cursor.close()
+    conexao.close()
+    
+    
 
 
 #Diretor-------------------------------|
