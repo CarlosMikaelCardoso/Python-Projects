@@ -10,7 +10,6 @@ def adicionar_prefixo(numeros, prefixo):
     return str(prefixo) + ''.join(f'{numero:01}' for numero in numeros)
 
 
-
 #Def's
 def error():
     #Mensagem após errar senha ou usuário de Login
@@ -21,10 +20,14 @@ def error():
 #Alunos    
 def aluno():
     #Janela do Aluno, Consulta o Nome do Aluno
-    alunos = tk.Toplevel()
-    alunos.title("Alunos")
-    nome_label = tk.Label(alunos, text="Nome")
+    janela_alunos = tk.Toplevel()
+    janela_alunos.title("Alunos")
+    nome_label = tk.Label(janela_alunos, text="Nome")
     nome_label.pack()
+    
+    exit = tk.Button(janela_alunos, text="Voltar", command=lambda: inicio(janela_alunos))
+    exit.pack()
+    
 #Professor
 def janela_professor():
     #Janela do Professor, Tem as funções Adicionar, Checar e Excluir
@@ -32,10 +35,23 @@ def janela_professor():
     professor.title("Professor")
     professor.geometry("250x300")
 
-    see_aluno = tk.Button(professor, text="Visualizar\n Aluno",command=procurar_aluno_por_disciplina_janela)
+    see_aluno = tk.Button(professor, text="Visualizar\n Aluno",command=procurar_alunos_por_disciplina_janela)
     see_aluno.grid(row=0,column=0,padx=5,pady=5)
+    
+    see_disciplinas = tk.Button(professor, text="Visualizar\n Disicplinas", command=disciplinas_curso_janela)
+    see_disciplinas.grid(row=0, column=1, padx=5, pady=5)
+    
+    see_professor = tk.Button(professor, text="Visualizar\n Professor(Disciplina)", command=professor_disciplina_janela)
+    see_professor.grid(row=0,column=2,padx=5,pady=5)
+    
+    see_professor_C = tk.Button(professor, text="Visualizar\n Professor(Curso)", command=professor_curso_janela)
+    see_professor_C.grid(row=0,column=3,padx=5,pady=5)
+    
+    exit = tk.Button(professor, text="Voltar", command=lambda: inicio(professor))
+    exit.grid(row=2,column=0, padx=5,pady=5)
 
-def procurar_aluno_por_disciplina_janela():
+#P_alunos------------------------------|
+def procurar_alunos_por_disciplina_janela():
     global disciplina_entry
     p_aluno = tk.Toplevel()
     p_aluno.title("Procurar Aluno")
@@ -47,16 +63,15 @@ def procurar_aluno_por_disciplina_janela():
     disciplina_entry = tk.Entry(p_aluno)
     disciplina_entry.grid(row=0,column=1, padx=5, pady=5)
     
-    enter = tk.Button(p_aluno, text="Enter", command=lambda: procurar_aluno_por_disciplina(disciplina_entry.get()))
+    enter = tk.Button(p_aluno, text="Enter", command=lambda: procurar_alunos_por_disciplina(disciplina_entry.get()))
     enter.grid(row=1,column=0, padx=5,pady=5)
-    
-def procurar_aluno_por_disciplina(disciplina):
+def procurar_alunos_por_disciplina(disciplina):
     disciplina_entry.delete(0, 'end')
     conexao = net.connect("Trabalho.db")
     cursor = conexao.cursor()
     
     info_janela = tk.Toplevel()
-    info_janela.title("Alunos")
+    info_janela.title("Aluno(s)")
     info_janela.withdraw()
     
     info_label = tk.Label(info_janela,text='')
@@ -77,12 +92,140 @@ def procurar_aluno_por_disciplina(disciplina):
     conexao.commit()
     cursor.close()
     conexao.close()
+#--------------------------------------|   
+#P_Disciplinas-------------------------|
+def disciplinas_curso_janela():
+    global disciplina_entry
+    p_disciplinas = tk.Toplevel()
+    p_disciplinas.title("Procurar Disciplinas")
+    p_disciplinas.geometry("200x300")
     
+    disciplina = tk.Label(p_disciplinas, text="Curso")
+    disciplina.grid(row=0,column=0, padx=5,pady=5)
     
+    disciplina_entry = tk.Entry(p_disciplinas)
+    disciplina_entry.grid(row=0,column=1, padx=5, pady=5)
+    
+    enter = tk.Button(p_disciplinas, text="Enter", command=lambda:disciplianas_curso(disciplina_entry.get()))
+    enter.grid(row=1,column=0, padx=5,pady=5)
+def disciplianas_curso(curso):    
+    disciplina_entry.delete(0, 'end')
+    conexao = net.connect("Trabalho.db")
+    cursor = conexao.cursor()
+    
+    info_janela = tk.Toplevel()
+    info_janela.title("Curso(s)")
+    info_janela.withdraw()
+    
+    info_label = tk.Label(info_janela,text='')
+    info_label.pack()
+    
+    cursor.execute('''SELECT * FROM Disciplinas JOIN Cursos ON Disciplinas.Curso = Cursos.Nome WHERE Curso = ?''', (curso,))
+    alunos = cursor.fetchall()
+    info = ""
 
+    if alunos:
+        for aluno in alunos:
+            info += f"ID: {aluno[0]} | Nome: {aluno[1]} | Curso: {aluno[2]} |\n"
+    
+    info_janela.deiconify()
+    info_label.config(text=info)
 
+    
+    conexao.commit()
+    cursor.close()
+    conexao.close()
+#--------------------------------------|
+#P_Professor_Disciplina----------------|
+def professor_disciplina_janela():
+    global disciplina_entry
+    p_professor = tk.Toplevel()
+    p_professor.title("Procurar Professor")
+    p_professor.geometry("200x300")
+    
+    disciplina = tk.Label(p_professor, text="Disciplina")
+    disciplina.grid(row=0,column=0, padx=5,pady=5)
+    
+    disciplina_entry = tk.Entry(p_professor)
+    disciplina_entry.grid(row=0,column=1, padx=5, pady=5)
+    
+    enter = tk.Button(p_professor, text="Enter", command=lambda:professor_disciplina(disciplina_entry.get()))
+    enter.grid(row=1,column=0, padx=5,pady=5)
+def professor_disciplina(disciplina):
+    disciplina_entry.delete(0, 'end')
+    conexao = net.connect("Trabalho.db")
+    cursor = conexao.cursor()
+    
+    info_janela = tk.Toplevel()
+    info_janela.title("Professor(s)")
+    info_janela.withdraw()
+    
+    info_label = tk.Label(info_janela,text='')
+    info_label.pack()
+    
+    cursor.execute('''SELECT * FROM Professor WHERE Disciplina = ?''', (disciplina,))
+    alunos = cursor.fetchall()
+    info = ""
+
+    if alunos:
+        for aluno in alunos:
+            info += f"ID: {aluno[0]} | Nome: {aluno[1]} | Curso: {aluno[2]} | Disciplina: {aluno[3]} |\n"
+    
+    info_janela.deiconify()
+    info_label.config(text=info)
+
+    
+    conexao.commit()
+    cursor.close()
+    conexao.close()
+#--------------------------------------|
+#P_Professor_Curso---------------------|
+def professor_curso_janela():
+    global disciplina_entry
+    p_professor = tk.Toplevel()
+    p_professor.title("Procurar Professor")
+    p_professor.geometry("200x300")
+    
+    disciplina = tk.Label(p_professor, text="Curso")
+    disciplina.grid(row=0,column=0, padx=5,pady=5)
+    
+    disciplina_entry = tk.Entry(p_professor)
+    disciplina_entry.grid(row=0,column=1, padx=5, pady=5)
+    
+    enter = tk.Button(p_professor, text="Enter", command=lambda:professor_curso(disciplina_entry.get()))
+    enter.grid(row=1,column=0, padx=5,pady=5)
+def professor_curso(curso):
+    disciplina_entry.delete(0, 'end')
+    conexao = net.connect("Trabalho.db")
+    cursor = conexao.cursor()
+    
+    info_janela = tk.Toplevel()
+    info_janela.title("Professore(s)")
+    info_janela.withdraw()
+    
+    info_label = tk.Label(info_janela,text='')
+    info_label.pack()
+    
+    cursor.execute('''SELECT * FROM Professor WHERE Curso = ?''', (curso,))
+    alunos = cursor.fetchall()
+    info = ""
+
+    if alunos:
+        for aluno in alunos:
+            info += f"ID: {aluno[0]} | Nome: {aluno[1]} | Curso: {aluno[2]} | Disciplina: {aluno[3]} |\n"
+    
+    info_janela.deiconify()
+    info_label.config(text=info)
+
+    
+    conexao.commit()
+    cursor.close()
+    conexao.close()
+#--------------------------------------|
+     
 #Diretor-------------------------------|
 def diretor():
+    global janela_diretor
     janela_diretor = tk.Toplevel()
     janela_diretor.title("Diretor")
     janela_diretor.geometry("600x300")   
@@ -109,7 +252,10 @@ def diretor():
     cad_curso.grid(row=0,column=3,padx=5,pady=5)
     
     del_curso = tk.Button(janela_diretor, text="Deletear Curso", command=del_curso_janela)
-    del_curso.grid(row=1,column=3,padx=5,pady=5,sticky=tk.W)    
+    del_curso.grid(row=1,column=3,padx=5,pady=5,sticky=tk.W) 
+    
+    exit = tk.Button(janela_diretor, text="Voltar", command=lambda: inicio(janela_diretor))
+    exit.grid(row=2,column=0, padx=5,pady=5)   
 #Add_alunos----------------------------|
 def add_aluno_janela():
     global nome_entry, curso_entry, disciplina_entry
@@ -394,7 +540,7 @@ def del_curso(Id):
 #--------------------------------------|
 def autenticacao():
     #Janela de Login
-    global autenticar, user, senha, user_entry, senha_entry
+    global autenticar,user, senha, user_entry, senha_entry
     root.withdraw()
     autenticar = tk.Toplevel()
     autenticar.title("Login")
@@ -411,6 +557,10 @@ def autenticacao():
     senha = "0101"
     verificar_button = tk.Button(autenticar, text="Enter",padx=7, command=lambda:verificacao(user_entry.get(),senha_entry.get()))
     verificar_button.grid(row=3, column=0)
+    
+    exit = tk.Button(autenticar, text="Voltar", command=lambda: inicio(autenticar))
+    exit.grid(row=3,column=1, padx=5,pady=5)
+    
 def verificacao(user,senha):
     #Login
     user1 = "Prof"
@@ -464,6 +614,10 @@ def iniciar_db():
     conexao.commit()
     cursor.close()
     conexao.close()
+ 
+def inicio(janela):
+    janela.withdraw()
+    root.deiconify()
     
 #Janelas Principal
 iniciar_db()
