@@ -1,6 +1,8 @@
 import tkinter as tk
 import sqlite3 as net 
 import random
+import matplotlib.pyplot as plt
+from fpdf import FPDF
 #Gerador de numeros
 
 def gerar_numeros_aleatorios_unicos(quantidade, limite_inferior, limite_superior):
@@ -8,6 +10,89 @@ def gerar_numeros_aleatorios_unicos(quantidade, limite_inferior, limite_superior
 
 def adicionar_prefixo(numeros, prefixo):
     return str(prefixo) + ''.join(f'{numero:01}' for numero in numeros)
+
+def gerar_relatorio():
+    conexao = net.connect("Trabalho.db")
+    cursor = conexao.cursor()
+
+    cursor.execute('SELECT * FROM Alunos')
+    alunos = cursor.fetchall()
+    cursor.execute('SELECT * FROM Professor')
+    professores = cursor.fetchall()
+    cursor.execute('SELECT * FROM Disciplinas')
+    disciplinas = cursor.fetchall()
+    cursor.execute('SELECT * FROM Cursos')
+    cursos = cursor.fetchall()
+
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+
+    pdf.cell(200, 10, txt="Relatório da Instituição", ln=True, align='C')
+    
+    pdf.cell(200, 10, txt="Alunos:", ln=True, align='L')
+    for aluno in alunos:
+        pdf.cell(200, 10, txt=f"ID: {aluno[0]} | Nome: {aluno[1]} | Curso: {aluno[2]} | Disciplina: {aluno[3]}", ln=True, align='L')
+    
+    pdf.cell(200, 10, txt="Professores:", ln=True, align='L')
+    for professor in professores:
+        pdf.cell(200, 10, txt=f"ID: {professor[0]} | Nome: {professor[1]} | Curso: {professor[2]} | Disciplina: {professor[3]}", ln=True, align='L')
+    
+    pdf.cell(200, 10, txt="Disciplinas:", ln=True, align='L')
+    for disciplina in disciplinas:
+        pdf.cell(200, 10, txt=f"ID: {disciplina[0]} | Nome: {disciplina[1]} | Curso: {disciplina[2]}", ln=True, align='L')
+    
+    pdf.cell(200, 10, txt="Cursos:", ln=True, align='L')
+    for curso in cursos:
+        pdf.cell(200, 10, txt=f"ID: {curso[0]} | Nome: {curso[1]}", ln=True, align='L')
+    
+    # Contar a quantidade de alunos em cada curso
+    cursos_alunos = {}
+    for aluno in alunos:
+        curso = aluno[2]
+        if curso in cursos_alunos:
+            cursos_alunos[curso] += 1
+        else:
+            cursos_alunos[curso] = 1
+
+    # Remover duplicatas e padronizar o nome dos cursos
+    cursos_unicos = {}
+    for curso, quantidade in cursos_alunos.items():
+        curso_padronizado = curso.strip().lower()  # Remover espaços em branco e converter para minúsculas
+        if curso_padronizado in cursos_unicos:
+            cursos_unicos[curso_padronizado] += quantidade
+        else:
+            cursos_unicos[curso_padronizado] = quantidade
+
+    # Ordenar os cursos pela quantidade de alunos (em ordem decrescente)
+    cursos_ordenados = sorted(cursos_unicos.items(), key=lambda item: item[1], reverse=True)
+    cursos = [item[0] for item in cursos_ordenados]
+    quantidade_alunos = [item[1] for item in cursos_ordenados]
+
+    # Gerar o gráfico de dispersão invertido
+    plt.figure(figsize=(10, 5))
+    plt.scatter(quantidade_alunos, cursos, color='blue')
+    plt.xlabel('Quantidade de Alunos')
+    plt.ylabel('Curso')
+    plt.title('Quantidade de Alunos por Curso')
+    plt.yticks(range(len(cursos)), cursos)  # Rotula o eixo y com os nomes dos cursos
+    plt.tight_layout()
+    plt.savefig('grafico_dispersao.png')
+    plt.close()
+
+    # Ajustar a largura da imagem para caber no PDF
+    pdf.image('grafico_dispersao.png', x=10, y=None, w=190)  # Largura ajustada para caber na página
+
+    pdf.output("relatorio_instituicao.pdf")
+
+    cursor.close()
+    conexao.close()
+
+    sucesso = tk.Tk()
+    sucesso.title("Relatório")
+    sucesso_label = tk.Label(sucesso, text="Relatório gerado com sucesso!")
+    sucesso_label.pack()
+
 
 
 #Def's
@@ -46,6 +131,9 @@ def janela_professor():
     
     see_professor_C = tk.Button(professor, text="Visualizar\n Professor(Curso)", command=professor_curso_janela)
     see_professor_C.grid(row=0,column=3,padx=5,pady=5)
+    
+    gerar_relatorios = tk.Button(professor, text="Relatório", command=gerar_relatorio)
+    gerar_relatorios.grid(row=0, column=4, padx=5,pady=5)
     
     exit = tk.Button(professor, text="Voltar", command=lambda: inicio(professor))
     exit.grid(row=2,column=0, padx=5,pady=5)
@@ -157,7 +245,7 @@ def professor_disciplina(disciplina):
     cursor = conexao.cursor()
     
     info_janela = tk.Toplevel()
-    info_janela.title("Professor(s)")
+    info_janela.title("Professor(es)")
     info_janela.withdraw()
     
     info_label = tk.Label(info_janela,text='')
@@ -200,7 +288,7 @@ def professor_curso(curso):
     cursor = conexao.cursor()
     
     info_janela = tk.Toplevel()
-    info_janela.title("Professore(s)")
+    info_janela.title("Professore(es)")
     info_janela.withdraw()
     
     info_label = tk.Label(info_janela,text='')
@@ -222,6 +310,8 @@ def professor_curso(curso):
     cursor.close()
     conexao.close()
 #--------------------------------------|
+
+
      
 #Diretor-------------------------------|
 def diretor():
