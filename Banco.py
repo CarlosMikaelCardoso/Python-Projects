@@ -70,8 +70,7 @@ def gerar_relatorio():
     cursos_ordenados = sorted(cursos_unicos.items(), key=lambda item: item[1], reverse=True)
     cursos = [item[0] for item in cursos_ordenados]
     quantidade_alunos = [item[1] for item in cursos_ordenados]
-
-    # Gerar o gráfico de dispersão invertido
+    
     plt.figure(figsize=(10, 5))
     plt.scatter(quantidade_alunos, cursos, color='blue')
     plt.xlabel('Quantidade de Alunos')
@@ -96,12 +95,6 @@ def gerar_relatorio():
     sucesso_label.pack()
 
 #Def's
-def error():
-    #Mensagem após errar senha ou usuário de Login
-    erro = tk.Tk()
-    erro.title("Erro")
-    erro_label = tk.Label(erro, text="Usuário/Senha incorretos!")
-    erro_label.pack()
 #Alunos    
 def aluno():
     #Janela do Aluno, Consulta o Nome do Aluno
@@ -109,45 +102,44 @@ def aluno():
     janela_alunos = tk.Toplevel(root)
     janela_alunos.title("Alunos")
     
-    see_aluno = tk.Button(janela_alunos, text="Visualizar\n Aluno",command=procurar_alunos_por_disciplina_janela)
-    see_aluno.grid(row=0,column=0,padx=5,pady=5)
+    see_aluno = tk.Button(janela_alunos, text="Visualizar\n Aluno",command=procurar_alunos_por_disciplina_janela,  width=16, height=2)
+    see_aluno.grid(row=0,column=0, padx=1)
     
-    see_disciplinas = tk.Button(janela_alunos, text="Visualizar\n Disicplinas", command=disciplinas_curso_janela)
-    see_disciplinas.grid(row=0, column=1, padx=5, pady=5)
+    see_disciplinas = tk.Button(janela_alunos, text="Visualizar\n Disicplinas", command=disciplinas_curso_janela,  width=13, height=2)
+    see_disciplinas.grid(row=0, column=1)
     
     see_professor = tk.Button(janela_alunos, text="Visualizar\n Professor(Disciplina)", command=professor_disciplina_janela)
-    see_professor.grid(row=0,column=2,padx=5,pady=5)
+    see_professor.grid(row=1,column=0)
     
     see_professor_C = tk.Button(janela_alunos, text="Visualizar\n Professor(Curso)", command=professor_curso_janela)
-    see_professor_C.grid(row=0,column=3,padx=5,pady=5)
+    see_professor_C.grid(row=1,column=1,padx=3)
     
-    exit = tk.Button(janela_alunos, text="Voltar", command=lambda: inicio(janela_alunos))
-    exit.grid(row=1, column=0, padx=5,pady=5)
+    exit = tk.Button(janela_alunos, text="Voltar", command=lambda: inicio(janela_alunos), width=15)
+    exit.grid(row=3,column=0, rowspan=1,columnspan=4, pady=2)
     
 #Professor
 def janela_professor():
-    #Janela do Professor, Tem as funções Adicionar, Checar e Excluir
     professor = tk.Toplevel(root)
     professor.title("Professor")
-    professor.geometry("250x300")
+    professor.geometry("228x160")
 
-    see_aluno = tk.Button(professor, text="Visualizar\n Aluno",command=procurar_alunos_por_disciplina_janela)
-    see_aluno.grid(row=0,column=0,padx=5,pady=5)
+    see_aluno = tk.Button(professor, text="Visualizar\n Aluno",command=procurar_alunos_por_disciplina_janela,  width=16, height=2)
+    see_aluno.grid(row=0,column=0, padx=1)
     
-    see_disciplinas = tk.Button(professor, text="Visualizar\n Disicplinas", command=disciplinas_curso_janela)
-    see_disciplinas.grid(row=0, column=1, padx=5, pady=5)
+    see_disciplinas = tk.Button(professor, text="Visualizar\n Disicplinas", command=disciplinas_curso_janela,  width=13, height=2)
+    see_disciplinas.grid(row=0, column=1)
     
     see_professor = tk.Button(professor, text="Visualizar\n Professor(Disciplina)", command=professor_disciplina_janela)
-    see_professor.grid(row=0,column=2,padx=5,pady=5)
+    see_professor.grid(row=1,column=0)
     
     see_professor_C = tk.Button(professor, text="Visualizar\n Professor(Curso)", command=professor_curso_janela)
-    see_professor_C.grid(row=0,column=3,padx=5,pady=5)
+    see_professor_C.grid(row=1,column=1,padx=3)
     
-    gerar_relatorios = tk.Button(professor, text="Relatório", command=gerar_relatorio)
-    gerar_relatorios.grid(row=0, column=4, padx=5,pady=5)
+    gerar_relatorios = tk.Button(professor, text="Relatório", command=gerar_relatorio,width=15)
+    gerar_relatorios.grid(row=2, column=0, columnspan=4 ,pady=2)
     
-    exit = tk.Button(professor, text="Voltar", command=lambda: inicio(professor))
-    exit.grid(row=2,column=0, padx=5,pady=5)
+    exit = tk.Button(professor, text="Voltar", command=lambda: inicio(professor), width=15)
+    exit.grid(row=3,column=0, rowspan=1,columnspan=4, pady=2)
 
 #P_alunos------------------------------|
 def procurar_alunos_por_disciplina_janela():
@@ -155,6 +147,7 @@ def procurar_alunos_por_disciplina_janela():
     p_aluno = tk.Toplevel(root)
     p_aluno.title("Procurar Aluno")
     p_aluno.geometry("300x65")
+    p_aluno.resizable("False", "False")
     
     disciplina = tk.Label(p_aluno, text="Disciplina")
     disciplina.grid(row=0,column=0, padx=5,pady=5)
@@ -186,6 +179,7 @@ def disciplinas_curso_janela():
     p_disciplinas = tk.Toplevel(root)
     p_disciplinas.title("Procurar Disciplinas")
     p_disciplinas.geometry("300x65")
+    p_disciplinas.resizable("False", "False")
     
     disciplina = tk.Label(p_disciplinas, text="Curso")
     disciplina.grid(row=0,column=0, padx=5,pady=5)
@@ -218,6 +212,7 @@ def professor_disciplina_janela():
     p_professor = tk.Toplevel(root)
     p_professor.title("Procurar Professor")
     p_professor.geometry("300x65")
+    p_professor.resizable("False", "False")
     
     disciplina = tk.Label(p_professor, text="Disciplina")
     disciplina.grid(row=0,column=0, padx=5,pady=5)
@@ -250,6 +245,7 @@ def professor_curso_janela():
     p_professor = tk.Toplevel(root)
     p_professor.title("Procurar Professor")
     p_professor.geometry("300x65")
+    p_professor.resizable("False", "False")
     
     disciplina = tk.Label(p_professor, text="Curso")
     disciplina.grid(row=0,column=0, padx=5,pady=5)
@@ -281,6 +277,7 @@ def janela_cadastro():
     cadastro = tk.Toplevel(root)
     cadastro.title("Cadastro")
     cadastro.geometry("455x55")
+    cadastro.resizable("False", "False")
     
     cad_aluno = tk.Button(cadastro,text="Cadastrar aluno", command=add_aluno_janela)
     cad_aluno.grid(row=0,column=0,padx=5,pady=5,sticky=tk.W)
@@ -296,7 +293,8 @@ def janela_cadastro():
 def janela_delete():
     delete = tk.Toplevel(root)
     delete.title("Delete")
-    delete.geometry("450x50") 
+    delete.geometry("450x50")
+    delete.resizable("False", "False") 
      
     del_alunos = tk.Button(delete,text="Deletar Aluno", command=del_alunos_janela)
     del_alunos.grid(row=1,column=0,padx=5,pady=5,sticky=tk.W)   
@@ -316,34 +314,36 @@ def diretor():
     global janela_diretor
     janela_diretor = tk.Toplevel(root)
     janela_diretor.title("Diretor")
-    janela_diretor.geometry("600x300")   
+    janela_diretor.geometry("232x170")   
     
-    cadastro = tk.Button(janela_diretor, text="Cadastro", command=janela_cadastro)
-    cadastro.grid(row=0, column=0, padx=5, pady=5)
+    cadastro = tk.Button(janela_diretor, text="Cadastro", command=janela_cadastro, width=16, height=2)
+    cadastro.grid(row=2, column=0, padx=3, pady=2)
 
-    cadastro = tk.Button(janela_diretor, text="Delete", command=janela_delete)
-    cadastro.grid(row=0, column=1 , padx=5, pady=5)
+    cadastro = tk.Button(janela_diretor, text="Delete", command=janela_delete, width=13, height=2)
+    cadastro.grid(row=2, column=1 , padx=3, pady=2)
     
-    see_aluno = tk.Button(janela_diretor, text="Visualizar\n Aluno",command=procurar_alunos_por_disciplina_janela)
-    see_aluno.grid(row=0,column=2,padx=5,pady=5)
+    see_aluno = tk.Button(janela_diretor, text="Visualizar\n Aluno",command=procurar_alunos_por_disciplina_janela,  width=16, height=2)
+    see_aluno.grid(row=0,column=0, pady=2)
     
-    see_disciplinas = tk.Button(janela_diretor, text="Visualizar\n Disicplinas", command=disciplinas_curso_janela)
-    see_disciplinas.grid(row=0, column=3, padx=5, pady=5)
+    see_disciplinas = tk.Button(janela_diretor, text="Visualizar\n Disicplinas", command=disciplinas_curso_janela,  width=13, height=2)
+    see_disciplinas.grid(row=0, column=1, pady=2)
     
     see_professor = tk.Button(janela_diretor, text="Visualizar\n Professor(Disciplina)", command=professor_disciplina_janela)
-    see_professor.grid(row=0,column=4,padx=5,pady=5)
+    see_professor.grid(row=1,column=0,pady=2)
     
     see_professor_C = tk.Button(janela_diretor, text="Visualizar\n Professor(Curso)", command=professor_curso_janela)
-    see_professor_C.grid(row=0,column=5,padx=5,pady=5)
+    see_professor_C.grid(row=1,column=1,padx=3)
 
-    exit = tk.Button(janela_diretor, text="Voltar", command=lambda: inicio(janela_diretor))
-    exit.grid(row=2,column=0, padx=5,pady=5)   
+    exit = tk.Button(janela_diretor, text="Voltar", command=lambda: inicio(janela_diretor), width=15)
+    exit.grid(row=3,column=0, rowspan=1,columnspan=4, pady=2) 
+    
 #Add_alunos----------------------------|
 def add_aluno_janela():
     global nome_entry, curso_entry, disciplina_entry
     add_janela = tk.Toplevel(root)
     add_janela.title("Cadastro de aluno")
     add_janela.geometry("300x200")
+    add_janela.resizable("False", "False")
 
     nome = tk.Label(add_janela, text="Aluno")
     nome.grid(row=0,column=0,padx=5,pady=5)
@@ -399,6 +399,7 @@ def del_alunos_janela():
     del_janela = tk.Toplevel(root)
     del_janela.title("Deletar Aluno")
     del_janela.geometry("300x200")
+    del_janela.resizable("False", "False")
     
     id = tk.Label(del_janela, text="ID")
     id.grid(row=0,column=0,padx=5,pady=5)
@@ -424,6 +425,7 @@ def add_professor_janela():
     add_p_janela = tk.Toplevel(root)
     add_p_janela.title("Cadastrar Professor")
     add_p_janela.geometry("300x200")
+    add_p_janela.resizable("False", "False")
 
     nome = tk.Label(add_p_janela, text="Professor")
     nome.grid(row=0,column=0,padx=5,pady=5)
@@ -475,6 +477,7 @@ def del_professor_janela():
     del_janela = tk.Toplevel(root)
     del_janela.title("Deletar Professor")
     del_janela.geometry("300x200")
+    del_janela.resizable("False", "False")
     
     id = tk.Label(del_janela, text="ID")
     id.grid(row=0,column=0,padx=5,pady=5)
@@ -500,6 +503,7 @@ def add_disciplina_janela():
     add_d_janela = tk.Toplevel(root)
     add_d_janela.title("Cadastrar Disciplina")
     add_d_janela.geometry("300x200")
+    add_d_janela.resizable("False", "False")
 
     nome = tk.Label(add_d_janela, text="Disciplina")
     nome.grid(row=0,column=0,padx=5,pady=5)
@@ -545,6 +549,7 @@ def del_disciplina_janela():
     del_janela = tk.Toplevel(root)
     del_janela.title("Deletar Disciplina")
     del_janela.geometry("300x200")
+    del_janela.resizable("False", "False")
     
     id = tk.Label(del_janela, text="ID")
     id.grid(row=0,column=0,padx=5,pady=5)
@@ -570,6 +575,7 @@ def add_curso_janela():
     add_c_janela = tk.Toplevel(root)
     add_c_janela.title("Cadastrar Curso")
     add_c_janela.geometry("300x200")
+    add_c_janela.resizable("False", "False")
 
     nome = tk.Label(add_c_janela, text="Curso")
     nome.grid(row=0,column=0,padx=5,pady=5)
@@ -609,6 +615,7 @@ def del_curso_janela():
     del_janela = tk.Toplevel(root)
     del_janela.title("Deletar Curso")
     del_janela.geometry("300x200")
+    del_janela.resizable("False", "False")
     
     id = tk.Label(del_janela, text="ID")
     id.grid(row=0,column=0,padx=5,pady=5)
@@ -630,8 +637,9 @@ def del_curso(Id):
 #--------------------------------------|
 def autenticacao():
     #Janela de Login
-    global autenticar,user, senha, user_entry, senha_entry
+    global autenticar, user_entry, senha_entry
     autenticar = tk.Toplevel(root)
+    autenticar.resizable("False", "False")
     root.withdraw()
     autenticar.title("Login")
     autenticar.geometry("225x110")
@@ -643,8 +651,6 @@ def autenticacao():
     user_entry.grid(row=0,column=1,padx=8,pady=5)
     senha_label.grid(row=1,column=0,padx=8,pady=5)
     senha_entry.grid(row=1,column=1,padx=8,pady=5)
-    user = "Prof"
-    senha = "0101"
     verificar_button = tk.Button(autenticar, text="Enter",padx=7, command=lambda:verificacao(user_entry.get(),senha_entry.get()))
     verificar_button.grid(row=3, column=0)
     
@@ -666,7 +672,7 @@ def verificacao(user,senha):
         diretor()
     else:
         senha_entry.delete(0, 'end')
-        error()
+        messagebox.showinfo("OPS...", "Senha\Úsuario Incorreto")
 def iniciar_db():
     conexao = net.connect("Trabalho.db")
     cursor = conexao.cursor()
@@ -774,15 +780,17 @@ iniciar_db()
 
 root = tk.Tk()
 root.title("Janela Principal")
-root.geometry("200x200")
+root.geometry("200x110")
+root.resizable("False", "False")
+
 
 form_frame = tk.Frame()
 form_frame.pack(pady=20)
 
-botao_aluno = tk.Button(form_frame,text="Alunos", command=aluno)
+botao_aluno = tk.Button(form_frame,text="Alunos", command=aluno, width=10)
 botao_aluno.grid(row=1,column=0,padx=5,pady=5)
 
-botao_professor = tk.Button(form_frame, text="Login", command=autenticacao)
+botao_professor = tk.Button(form_frame, text="Login", command=autenticacao, width=10)
 botao_professor.grid(row=0, column=0,padx=5,pady=5)
 
 root.mainloop()
