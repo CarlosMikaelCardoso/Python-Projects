@@ -169,8 +169,8 @@ def o():
     
 def p():
     return[
-        "P",
         "P P P",
+        "P    P",
         "P    P",
         "P P P",
         "P    ",
