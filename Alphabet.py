@@ -141,6 +141,42 @@ def m():
         "M       M",
         "M       M",
     ]
+    
+def n():
+    return[
+        "NN    N",
+        "N N   N",
+        "N  N  N",
+        "N   N N",
+        "N    NN",
+        "N     N",
+        "N     N",
+        "N     N",
+        
+        
+    ]
+    
+def o():
+    return[
+        " O O O",
+        "O     O",   
+        "O     O",
+        "O     O",
+        "O     O",
+        "O     O",
+        " O O O",
+    ]
+    
+def p():
+    return[
+        "P",
+        "P P P",
+        "P    P",
+        "P P P",
+        "P    ",
+        "P    ",
+        "P    ",
+    ]
 # Mapeamento de letras para funções
 letters = {
     "a": a,
@@ -156,6 +192,9 @@ letters = {
     "k": k,
     "l": l,
     "m": m,
+    "n": n,
+    "o": o,
+    "p": p
 }
 
 def print_letters(input_letters):
