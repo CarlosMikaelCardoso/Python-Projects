@@ -175,7 +175,20 @@ def p():
         "P P P",
         "P    ",
         "P    ",
-        "P    ",
+        "P    "
+    ]
+    
+def q():
+    return[
+        " Q Q Q",
+        "Q     Q",
+        "Q     Q",
+        "Q     Q",
+        "Q     Q",
+        "Q     Q",
+        " Q Q Q",
+        
+        
     ]
 # Mapeamento de letras para funções
 letters = {

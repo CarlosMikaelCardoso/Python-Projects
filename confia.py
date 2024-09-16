@@ -27,7 +27,7 @@ resultado.pack()
 botao_add = tk.Button(text="=", command=adicao)
 botao_add.pack()
 
-imagem = Image.open("C:\\Users\\Administrator\\Downloads\\confia.png")
+imagem = Image.open("C:\\Users\\202304623015\\Downloads\\confia.png")
 imagem_tk = ImageTk.PhotoImage(imagem)
 
 
