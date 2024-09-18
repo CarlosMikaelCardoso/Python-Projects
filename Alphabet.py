@@ -184,12 +184,43 @@ def q():
         "Q     Q",
         "Q     Q",
         "Q     Q",
-        "Q     Q",
-        "Q     Q",
+        "Q   Q Q",
         " Q Q Q",
-        
-        
+        "      Q" 
     ]
+    
+def r():
+    return[
+        "R R R",
+        "R     R",
+        "R R R",
+        "R R",
+        "R   R",
+        "R     R",
+        "R     R"
+    ]
+    
+def s():
+    return[
+        " S S",
+        "S    S",
+        " S",
+        "  S",
+        "    S",
+        "S    S",
+        " S S" 
+    ]
+    
+def t():
+    return[
+        "T T T T",
+        "   T",
+        "   T",
+        "   T",
+        "   T",
+        "   T",
+        "  TTT"
+    ]    
 # Mapeamento de letras para funções
 letters = {
     "a": a,
@@ -207,7 +238,11 @@ letters = {
     "m": m,
     "n": n,
     "o": o,
-    "p": p
+    "p": p,
+    "q": q,
+    "r": r,
+    "s": s,
+    "t": t
 }
 
 def print_letters(input_letters):
