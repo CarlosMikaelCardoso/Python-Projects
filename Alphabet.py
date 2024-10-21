@@ -267,7 +267,7 @@ def x():
     
 def y():        
     return[
-    "Y    Y",
+    "Y   Y",
     " Y Y",
     "  Y",
     "  Y",
