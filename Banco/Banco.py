@@ -23,15 +23,48 @@ def atualizar_saldo(id_conta, novo_saldo):
     print("Conta não encontrada.")
     return None  # Retorna None se a conta não for encontrada
 
+# Função para transferir saldo entre contas
+def remove_saldo(id_conta_origem, id_conta_destino, saldo):
+    conta_origem = next((conta for conta in contas if conta["id"] == id_conta_origem), None)
+    conta_destino = next((conta for conta in contas if conta["id"] == id_conta_destino), None)
+
+    if conta_origem is None:
+        print(f"Conta de origem com ID {id_conta_origem} não encontrada.")
+        return None
+
+    if conta_destino is None:
+        print(f"Conta de destino com ID {id_conta_destino} não encontrada.")
+        return None
+
+    if conta_origem["saldo"] >= saldo:
+        conta_origem["saldo"] -= saldo
+        conta_destino["saldo"] += saldo
+        print(f"Transferência concluída: {saldo} de {conta_origem['nome']} (ID {conta_origem['id']}) para {conta_destino['nome']} (ID {conta_destino['id']})")
+        # Criando a transação para registrar na blockchain
+        transacao = (
+            f"Transferencia de {saldo} realizada: "
+            f"Conta origem {conta_origem['nome']} (ID {conta_origem['id']}, novo saldo {conta_origem['saldo']}), "
+            f"Conta destino {conta_destino['nome']} (ID {conta_destino['id']}, novo saldo {conta_destino['saldo']})"
+        )
+        return transacao
+    else:
+        print(f"Saldo insuficiente na conta {conta_origem['nome']} (ID {conta_origem['id']}) para transferir {saldo}.")
+        return None
+
 # Criando algumas contas
 new_acc("Mikael")
 new_acc("Alice")
 
 # Realizando transações e registrando-as na blockchain
 transacao = atualizar_saldo(0, 1000)  # Atualiza o saldo da conta com ID 0 (Mikael)
-if transacao:  # Verifica se a transação foi criada corretamente
+if transacao:
     blockchain.adicionar_bloco(transacao)
 
 transacao = atualizar_saldo(1, 500)   # Atualiza o saldo da conta com ID 1 (Alice)
-if transacao:  # Verifica se a transação foi criada corretamente
+if transacao:
+    blockchain.adicionar_bloco(transacao)
+
+# Transferindo saldo entre contas e registrando na blockchain
+transacao = remove_saldo(0, 1, 500)  # Mikael transfere 500 para Alice
+if transacao:
     blockchain.adicionar_bloco(transacao)
