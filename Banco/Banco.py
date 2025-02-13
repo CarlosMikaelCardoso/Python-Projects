@@ -1,20 +1,49 @@
+import json
+import os
 from BlockChain import Blockchain
 
 blockchain = Blockchain()
 
 contas = []
 
+# Caminho do diretório blockchain_data dentro da pasta Banco
+data_dir = 'c:/Usuários/Gercom/Documentos/Codes/Python-Projects/Banco/blockchain_data'
+
+# Verifica se a pasta blockchain_data existe, se não, cria a pasta
+if not os.path.exists(data_dir):
+    os.makedirs(data_dir)
+
+# Caminho dos arquivos contas.txt e blockchain.txt
+contas_file_path = os.path.join(data_dir, 'contas.txt')
+
+
+# Função para carregar contas de um arquivo
+def carregar_contas():
+    global contas
+    try:
+        with open(contas_file_path, 'r') as file:
+            contas = json.load(file)
+    except FileNotFoundError:
+        contas = []
+
+# Função para salvar contas em um arquivo
+def salvar_contas():
+    with open(contas_file_path, 'w') as file:
+        json.dump(contas, file)
+
 # Função para criar uma nova conta
 def new_acc(nome):
     id = len(contas)
     contas.append({"nome": nome, "id": id, "saldo": 0})  # Usando inteiro para saldo
+    salvar_contas()
     print(f"Conta criada para {contas[id]['nome']} com ID {contas[id]['id']} e saldo {contas[id]['saldo']}")
 
 # Função para atualizar o saldo de uma conta com base no ID
 def atualizar_saldo(id_conta, novo_saldo):
     for conta in contas:
         if conta["id"] == id_conta:
-            conta["saldo"] = novo_saldo  # Atualiza o saldo
+            conta["saldo"] += novo_saldo  # Atualiza o saldo
+            salvar_contas()
             print(f"Saldo da conta {conta['nome']} (ID {conta['id']}) atualizado para {conta['saldo']}")
             # Criando uma transação para a blockchain
             transacao = f"Conta {conta['nome']} (ID {conta['id']}) atualizou seu saldo para {conta['saldo']}"
@@ -39,6 +68,7 @@ def remove_saldo(id_conta_origem, id_conta_destino, saldo):
     if conta_origem["saldo"] >= saldo:
         conta_origem["saldo"] -= saldo
         conta_destino["saldo"] += saldo
+        salvar_contas()
         print(f"Transferência concluída: {saldo} de {conta_origem['nome']} (ID {conta_origem['id']}) para {conta_destino['nome']} (ID {conta_destino['id']})")
         # Criando a transação para registrar na blockchain
         transacao = (
@@ -49,22 +79,28 @@ def remove_saldo(id_conta_origem, id_conta_destino, saldo):
         return transacao
     else:
         print(f"Saldo insuficiente na conta {conta_origem['nome']} (ID {conta_origem['id']}) para transferir {saldo}.")
-        return None
+        return None    
 
-# Criando algumas contas
-new_acc("Mikael")
-new_acc("Alice")
+def menu():
+    carregar_contas()
+    print("1 - Criar conta")
+    print("2 - Fazer uma Transação")
+    num = int(input("3 - Transferir Saldo \n"))
+    if num == 1:
+        nome = input("Qual seu nome?\n")
+        new_acc(nome)
+    elif num == 2:
+        id_conta = int(input("Qual o seu ID? \n"))
+        saldo_novo = int(input("Qual o valor? \n"))
+        transacao = atualizar_saldo(id_conta, saldo_novo)
+        if transacao:
+            blockchain.adicionar_bloco(transacao)
+    elif num == 3: 
+        id_conta = int(input("Qual o seu ID?\n"))
+        id_conta_destino = int(input("Qual o ID da conta destino?\n"))
+        saldo_novo = int(input("Qual o saldo irá tranferir?\n"))
+        transacao = remove_saldo(id_conta, id_conta_destino, saldo_novo)
+        if transacao:
+            blockchain.adicionar_bloco(transacao)       
 
-# Realizando transações e registrando-as na blockchain
-transacao = atualizar_saldo(0, 1000)  # Atualiza o saldo da conta com ID 0 (Mikael)
-if transacao:
-    blockchain.adicionar_bloco(transacao)
-
-transacao = atualizar_saldo(1, 500)   # Atualiza o saldo da conta com ID 1 (Alice)
-if transacao:
-    blockchain.adicionar_bloco(transacao)
-
-# Transferindo saldo entre contas e registrando na blockchain
-transacao = remove_saldo(0, 1, 500)  # Mikael transfere 500 para Alice
-if transacao:
-    blockchain.adicionar_bloco(transacao)
+menu()

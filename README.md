@@ -1,3 +1,2 @@
 # Python-Projects
-Codigos em Python de pratica
-Java SE 21
+Códigos em Python de pratica
