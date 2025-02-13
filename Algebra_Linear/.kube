@@ -1,0 +1,19 @@
+apiVersion: v1
+clusters:
+  - cluster:
+      certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUREekNDQWZlZ0F3SUJBZ0lVS1d4WjkzRWpzODJIeXBPQlNsbDJUbWw2M0hzd...
+      server: https://192.168.122.30:16443
+    name: microk8s-cluster
+contexts:
+  - context:
+      cluster: microk8s-cluster
+      user: admin
+    name: microk8s
+current-context: microk8s
+kind: Config
+preferences: {}
+users:
+  - name: admin
+    user:
+      client-certificate-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN6RENDQWJTZ0F3SUJBZ0lVU2o3V1ZPN2hDZXZKQTE2L3Rkemo0U3oxMkpZd0RR...
+      client-key-data: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFb3dJQkFBS0NBUUVBemdYQkloTjZwcFE5MklxdXdHWHJyWi9yWHZrWUpFT0Zpa2tN...

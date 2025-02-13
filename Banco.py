@@ -794,6 +794,3 @@ botao_professor = tk.Button(form_frame, text="Login", command=autenticacao, widt
 botao_professor.grid(row=0, column=0,padx=5,pady=5)
 
 root.mainloop()
-
-
-
