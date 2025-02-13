@@ -1,2 +1,2 @@
 # Python-Projects
-Codigos em Python de pratica
+Códigos em Python de pratica
