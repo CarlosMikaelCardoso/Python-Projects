@@ -14,7 +14,6 @@ if not os.path.exists(data_dir):
     os.makedirs(data_dir)
 
 # Caminho dos arquivos contas.txt e blockchain.txt
-blockchain_file_path = os.path.join(data_dir, 'blockchain.txt')
 contas_file_path = os.path.join(data_dir, 'contas.txt')
 
 
