@@ -1,1 +1,0 @@
-[{"nome": "Mikael", "id": 0, "saldo": 0}]

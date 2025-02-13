@@ -1,22 +1,35 @@
 import json
+import os
 from BlockChain import Blockchain
 
 blockchain = Blockchain()
 
 contas = []
 
+# Caminho do diretório blockchain_data dentro da pasta Banco
+data_dir = 'c:/Users/202304623015/Documents/Codes/Python-Projects/Banco/blockchain_data'
+
+# Verifica se a pasta blockchain_data existe, se não, cria a pasta
+if not os.path.exists(data_dir):
+    os.makedirs(data_dir)
+
+# Caminho dos arquivos contas.txt e blockchain.txt
+blockchain_file_path = os.path.join(data_dir, 'blockchain.txt')
+contas_file_path = os.path.join(data_dir, 'contas.txt')
+
+
 # Função para carregar contas de um arquivo
 def carregar_contas():
     global contas
     try:
-        with open('contas.txt', 'r') as file:
+        with open(contas_file_path, 'r') as file:
             contas = json.load(file)
     except FileNotFoundError:
         contas = []
 
 # Função para salvar contas em um arquivo
 def salvar_contas():
-    with open('contas.txt', 'w') as file:
+    with open(contas_file_path, 'w') as file:
         json.dump(contas, file)
 
 # Função para criar uma nova conta
@@ -30,7 +43,7 @@ def new_acc(nome):
 def atualizar_saldo(id_conta, novo_saldo):
     for conta in contas:
         if conta["id"] == id_conta:
-            conta["saldo"] = novo_saldo  # Atualiza o saldo
+            conta["saldo"] += novo_saldo  # Atualiza o saldo
             salvar_contas()
             print(f"Saldo da conta {conta['nome']} (ID {conta['id']}) atualizado para {conta['saldo']}")
             # Criando uma transação para a blockchain

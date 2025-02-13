@@ -3,9 +3,9 @@ import os
 import json
 
 class Blockchain:
-    def __init__(self, prefixo="008", pasta="blockchain_data", arquivo="blockchain.txt"):
+    def __init__(self, prefixo="008", pasta="c:/Users/202304623015/Documents/Codes/Python-Projects/Banco/blockchain_data", arquivo="blockchain.txt"):
         self.prefixo = prefixo
-        self.pasta = pasta
+        self.pasta = os.path.join(os.path.dirname(__file__), pasta)
         self.arquivo = arquivo
         self.blockchain = self.carregar_blockchain()
 
@@ -70,7 +70,6 @@ class Blockchain:
             texto += self.blockchain[bloco - 1]["hash"]
             texto += self.blockchain[bloco - 1]["hash_anterior"]
 
-
         # Encontrar o nonce e o hash
         nonce_usado, hash_encontrado = self.encontrar_hash_com_prefixo(texto)
 
@@ -94,9 +93,7 @@ class Blockchain:
         for bloco in self.blockchain:
             print(bloco)
 
-
 # Exemplo de uso
-
 if __name__ == "__main__":
     # Criar instância da classe Blockchain
     blockchain = Blockchain()
